@@ -8,52 +8,107 @@
 </head>
 <body>
   <nav class="bg-white p-4">
-    <div class="px-28 mx-auto flex items-center justify-between flex-wrap">
-      <div class="block md:hidden">
+    <div class="px-4 sm:px-6 lg:px-28 mx-auto flex items-center justify-between">
+      
+      <!-- Mobile Menu Icon (left-aligned on small screens) -->
+      <div class="block md:hidden flex-shrink-0">
         <button id="menu-btn" class="text-black focus:outline-none">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
           </svg>
         </button>
       </div>
-      <div class="text-gray-700 text-3xl font-bold">
+      
+      <!-- Logo (centered on small screens, left-aligned on md and larger) -->
+      <div class="text-gray-600 text-2xl sm:text-3xl font-bold">
         <a href="#">BUYVENTURE</a>
       </div>
-      <div class="hidden md:flex md:flex-grow justify-center space-x-12 text-black">
-        <a href="{% url 'home' %}" class="py-2 text-2xl">Home</a>
-        <a href="{% url 'store' %}" class="py-2 text-2xl">Shop</a>
-        <a href="#" class="py-2 text-2xl">About Us</a>
-        <a href="#" class="py-2 text-2xl">Blog</a>
-        <a href="#" class="py-2 text-2xl">Contact</a>
-      </a>
-      </div>
-      <div class="text-white">
-        <button id="cart-btn" class="relative inline-flex items-center mt-2">
-          <svg class='w-9 h-9' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" fill-rule="evenodd" d="M80,176a16,16,0,0,0-16,16V408c0,30.24,25.76,56,56,56H392c30.24,0,56-24.51,56-54.75V192a16,16,0,0,0-16-16Z"/><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" fill-rule="evenodd" d="M160,176V144a96,96,0,0,1,96-96h0a96,96,0,0,1,96,96v32"/></svg>
-            <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-black border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">{{cart_length }}</div>
-        </button>
       
+      <!-- Links (only visible on md and larger screens) -->
+      <div class="hidden md:flex md:flex-grow justify-center space-x-12 text-black">
+        <a href="{% url 'home' %}" class="py-2 text-lg sm:text-2xl">Home</a>
+        <a href="{% url 'store' %}" class="py-2 text-lg sm:text-2xl">Shop</a>
+        <a href="#" class="py-2 text-lg sm:text-2xl">About Us</a>
+        <a href="#" class="py-2 text-lg sm:text-2xl">Blog</a>
+        <a href="#" class="py-2 text-lg sm:text-2xl">Contact</a>
       </div>
+      
+      <!-- Cart Icon (right-aligned on all screen sizes) -->
+      <div class="text-black relative mt-2 md:order-2">
+        <button id="cart-btn" class="relative inline-flex items-center">
+          <svg class='w-8 h-8' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M80,176a16,16,0,0,0-16,16V408c0,30.24,25.76,56,56,56H392c30.24,0,56-24.51,56-54.75V192a16,16,0,0,0-16-16Z"/>
+            <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M160,176V144a96,96,0,0,1,96-96h0a96,96,0,0,1,96,96v32"/>
+          </svg>
+          <div class="absolute -top-2 -right-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-black border-2 border-white rounded-full">{{ cart_length }}</div>
+        </button>
+      </div>
+      
     </div>
+
+    <!-- Overlay and Mobile Menu -->
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-30 hidden"></div>
-    <div id="mobile-menu" class="hidden flex-col items-center bg-white mt-4 md:hidden">
-      <div class="flex justify-between items-center w-full">
-        <div class="text-black text-2xl font-bold">
-          <a href="#">BUYVENTURE</a>
-        </div>
+    <div id="mobile-menu" class="hidden flex-col bg-white mt-4 md:hidden space-y-4">
+      <div class="flex justify-between items-center w-full px-4">
+        <a href="#" class="text-black text-xl font-bold">BUYVENTURE</a>
         <button id="close-btn" class="text-black focus:outline-none">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
-      <a href="{% url 'home' %}" class="block py-2 text-black text-start">Home</a>
-      <a href="{% url 'store' %}" class="block py-2 text-black text-start">Shop</a>
-      <a href="#" class="block py-2 text-black text-start">About Us</a>
-      <a href="#" class="block py-2 text-black text-start">Blog</a>
-      <a href="#" class="block py-2 text-black text-start">Contact</a>
+      
+      <div class="flex flex-col items-start space-y-2">
+        <a href="{% url 'home' %}" class="text-black py-2">Home</a>
+        <a href="{% url 'store' %}" class="text-black py-2">Shop</a>
+        <a href="#" class="text-black py-2">About Us</a>
+        <a href="#" class="text-black py-2">Blog</a>
+        <a href="#" class="text-black py-2">Contact</a>
+      </div>
     </div>
-  </nav>
+</nav>
+<div class="fixed inset-x-0 bottom-0 bg-white shadow-md md:hidden flex justify-between items-center text-black p-4">
+  <!-- Home Icon -->
+  <a href="{% url 'home' %}" class="flex flex-col items-center text-sm">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9.5L12 4l9 5.5v8.5c0 .83-.67 1.5-1.5 1.5H4.5A1.5 1.5 0 013 18V9.5z"></path>
+      </svg>
+      <span>Home</span>
+  </a>
+  
+  <!-- Shop Icon -->
+  <a href="{% url 'store' %}" class="flex flex-col items-center text-sm">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11.5V6a4 4 0 00-8 0v5.5M5.5 12.5h13M9 18.5a2 2 0 11-4 0 2 2 0 014 0zm10 0a2 2 0 11-4 0 2 2 0 014 0z"></path>
+      </svg>
+      <span>Shop</span>
+  </a>
+  
+  <!-- Search Icon -->
+  <a href="#" class="flex flex-col items-center text-sm">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 16.5l6 6m-6-6A6.5 6.5 0 1016.5 10a6.5 6.5 0 00-6.5 6.5z"></path>
+      </svg>
+      <span>Search</span>
+  </a>
+  
+  <!-- Cart Icon -->
+  <a href="#" class="flex flex-col items-center text-sm relative">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.5 12.5l1.25 7.5h11.5l1.25-7.5M3 5.5h18M8 10.5v-3a4 4 0 118 0v3"></path>
+      </svg>
+      <span>Cart</span>
+      <span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold px-1 rounded-full">{{ cart_length }}</span>
+  </a>
+  
+  <!-- Wishlist Icon -->
+  <a href="#" class="flex flex-col items-center text-sm">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path>
+      </svg>
+      <span>Wishlist</span>
+  </a>
+</div>
   <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 md:w-[30rem] z-50">
     <div class="p-4 flex justify-between items-center border-b">
       <h2 class="text-4xl font-bold">Shopping Cart</h2>
@@ -231,6 +286,24 @@
         });
     });
 });
+</script>
+<script>
+  $(document).ready(function() {
+      $('#menu-btn').click(function() {
+          $('#overlay').removeClass('hidden');
+          $('#mobile-menu').removeClass('hidden');
+      });
+
+      $('#close-btn').click(function() {
+          $('#overlay').addClass('hidden');
+          $('#mobile-menu').addClass('hidden');
+      });
+
+      $('#overlay').click(function() {
+          $(this).addClass('hidden');
+          $('#mobile-menu').addClass('hidden');
+      });
+  });
 </script>
 </body>
 </html>
