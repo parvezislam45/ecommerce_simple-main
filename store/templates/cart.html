@@ -1,0 +1,18 @@
+<h1>Your Cart</h1>
+
+{% if cart %}
+    <ul>
+        {% for item in carts%}
+            <li>
+                <img src="{{ item.image }}" alt="{{ item.title }}" style="width: 100px; height: auto;">
+                <h2>{{ item.title }}</h2>
+                <p>Price: ${{ item.price }}</p>
+                <p>Quantity: {{ item.quantity }}</p>
+               
+            </li>
+        {% endfor %}
+    </ul>
+    <h2>Total Price: ${{ total_price|floatformat:2 }}</h2>
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}

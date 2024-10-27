@@ -1,0 +1,62 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container">
+        <div class="login__section--inner">
+            <div class="row row-cols-md-2 row-cols-1">
+                <div class="col">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="account__login register">
+                        <div class="account__login--header mb-25">
+                            <h3 class="account__login--header__title mb-10">Create an Account</h3>
+                            <p class="account__login--header__desc">Register here if you are a new customer</p>
+                        </div>
+                        <div class="account__login--inner">
+                            <label>
+                                <input class="account__login--input" name="first_name" placeholder="First Name" type="text">
+                            </label>
+                            <label>
+                                <input class="account__login--input" name="last_name" placeholder="Last Name" type="text">
+                            </label>
+                            <label>
+                                <input class="account__login--input" name="username" placeholder="Username" type="text">
+                            </label>
+                            <label>
+                                <input class="account__login--input" name="email" placeholder="Email Addres" type="email">
+                            </label>
+                            <label>
+                                <input class="account__login--input" name="password" placeholder="Password" type="password">
+                            </label>
+                            <label>
+                                <input class="account__login--input" name="confirm_password" placeholder="Confirm Password" type="password">
+                            </label>
+                            <label>
+                                <button class="account__login--btn primary__btn mb-10" type="submit">Submit & Register</button>
+                            </label>
+                            <div class="account__login--remember position__relative">
+                                <input class="checkout__checkbox--input" id="check2" type="checkbox">
+                                <span class="checkout__checkbox--checkmark"></span>
+                                <label class="checkout__checkbox--label login__remember--label" for="check2">
+                                    I have read and agree to the terms & conditions</label>
+                            </div>
+                            <p class="account__login--signup__text">Already have an account? 
+                                <a href="{% url 'customer_login' %}">Sign in now</a>
+                              </p> 
+                        </div>
+                    </div>
+                </div>
+                </form>
+
+            </div>
+        </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+{% include "customer/message.html" %}
+
+{% endblock %}
+    

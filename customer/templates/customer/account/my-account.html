@@ -1,0 +1,279 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+
+{% block head %}
+<style>
+  .account__profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .account__profile--image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image maintains aspect ratio */
+  }
+  .image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /
+  }
+  .account__profile--name {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+</style>
+{% endblock %}
+  
+
+{% block content %}
+
+  {% if is_guest %}
+  <section class="my__account--section section--padding">
+    <div class="container">
+      <p class="account__welcome--text">Hello, {{user.first_name}} welcome to your dashboard!</p>
+      <div class="my__account--section__inner border-radius-10 d-flex">
+        <div class="account__left--sidebar">
+          <h2>Welcome,{{guest_orders.first_name}} !</h2>
+          <p>You are currently viewing as a guest. Please log in to see your order history.</p>
+          <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <a href="{% url 'customer_login' %}" style="padding: 5px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px; font-size: 18px;">Login</a>
+            <a href="{% url 'sign_up' %}" style="padding: 5px 20px; background-color: #28A745; color: white; text-decoration: none; border-radius: 5px; font-size: 18px;">Sign Up</a>
+        </div>
+        
+        </div>
+        
+        
+        {% if guest_orders is not none %}
+          
+        <div class="account__wrapper">
+          <div class="account__content">
+            <h3 class="account__content--title mb-20">Orders History</h3>
+            <div class="account__table--area">
+              <table class="account__table">
+                <thead class="account__table--header">
+                  <tr class="account__table--header__child">
+                    <th class="account__table--header__child--items">Order ID</th>
+                    <th class="account__table--header__child--items">Date</th>
+                    <th class="account__table--header__child--items">Product Name</th>
+                    <th class="account__table--header__child--items">Payment Status</th>
+                    <th class="account__table--header__child--items">Delivery</th>
+                    <th class="account__table--header__child--items">Total</th>
+                  </tr>
+                </thead>
+                <tbody class="account__table--body mobile__none">
+
+                 
+                  <tr class="account__table--body__child">
+                    <td class="account__table--body__child--items">#{{guest_orders.order_id}}</td>
+                    <td class="account__table--body__child--items">{{ guest_orders.created_on|date:"Y-m-d H:i:s" }}</td>
+                    <td class="account__table--body__child--items">
+                      {% for item in guest_orders.items.all %}  <!-- Loop through order items -->
+                        {{ item.product.name }}{% if not forloop.last %}, {% endif %}  <!-- Show product names -->
+                      {% endfor %}
+                    </td>
+                    <td class="account__table--body__child--items">Paid</td>
+                    <td class="account__table--body__child--items">
+                      
+                      {% if guest_orders.status %}
+                      <i class="fa fa-check"></i> Delivered
+                      {% else %}
+                      <i class="fa fa-clock-o"></i> Pending
+                      {% endif %}
+                    </td>
+                    <td class="account__table--body__child--items">$ {{ guest_orders.total }}</td>
+                  </tr>
+                
+
+                </tbody>
+                <tbody class="account__table--body mobile__block">
+                  <tr class="account__table--body__child">
+                    <td class="account__table--body__child--items">
+                      <strong>Order ID</strong>
+                      <span>#{{guest_orders.order_id}}</span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Date</strong>
+                      <span>{{ guest_orders.created_on|date:"Y-m-d H:i:s" }}</span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Product Name</strong>
+                      <span>
+                        {% for item in guest_orders.items.all %}  <!-- Loop through order items -->
+                        {{ item.product.name }}{% if not forloop.last %}, {% endif %}  <!-- Show product names -->
+                        {% endfor %}
+                      </span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Payment Status</strong>
+                      <span>Paid</span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Delivery</strong>
+                      <span>
+                        {% if guest_orders.status %}
+                        <i class="fa fa-check"></i> Delivered
+                        {% else %}
+                        <i class="fa fa-clock-o"></i> Pending
+                        {% endif %}
+                      </span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Total</strong>
+                      <span>$ {{ guest_orders.total }}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="account__table--body__empty">
+          <h4>No orders found.</h4>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% else %}
+  <!-- my account section start -->
+  <section class="my__account--section section--padding">
+    <div class="container">
+      <p class="account__welcome--text">Hello, {{user.first_name}} welcome to your dashboard!</p>
+      <div class="my__account--section__inner border-radius-10 d-flex">
+        <div class="account__left--sidebar">
+          <h3 class="account__content--title mb-20">My Profile</h3>
+          <div class="account__profile mb-20">
+            <img src="{% static 'customer/img/male.png' %}" alt="Customer Image" id="image" class="account__profile--image">
+            <h4 class="account__profile--name">
+              {% if user.get_full_name %}
+                {{ user.get_full_name }}
+              {% else %}
+                  {{ user.username }}
+              {% endif %}
+            </h4>
+          </div>
+          <ul class="account__menu">
+            <li class="account__menu--list active">
+              <a href="my-account.html">Dashboard</a>
+            </li>
+            <li class="account__menu--list">
+              <a href="#">Addresses</a>
+            </li>
+            <li class="account__menu--list">
+              <a href="{% url 'wishlist' %}">Wishlist</a>
+            </li>
+            <li class="account__menu--list">
+              <a href="{% url 'logout' %}">Log Out</a>
+            </li>
+          </ul>
+        </div>
+        
+        {% if user_orders %}
+          
+        <div class="account__wrapper">
+          <div class="account__content">
+            <h3 class="account__content--title mb-20">Orders History</h3>
+            <div class="account__table--area">
+              <table class="account__table">
+                <thead class="account__table--header">
+                  <tr class="account__table--header__child">
+                    <th class="account__table--header__child--items">Order ID</th>
+                    <th class="account__table--header__child--items">Date</th>
+                    <th class="account__table--header__child--items">Product Name</th>
+                    <th class="account__table--header__child--items">Payment method</th>
+                    <th class="account__table--header__child--items">Delivery</th>
+                    <th class="account__table--header__child--items">Total</th>
+                  </tr>
+                </thead>
+                <tbody class="account__table--body mobile__none">
+
+                  {% for order in user_orders %}
+                  <tr class="account__table--body__child">
+                    <td class="account__table--body__child--items">#{{order.order_id}}</td>
+                    <td class="account__table--body__child--items">{{ order.created_on|date:"Y-m-d H:i:s" }}</td>
+                    <td class="account__table--body__child--items">
+                      {% for item in order.items.all %}  <!-- Loop through order items -->
+                        {{ item.product.name }}{% if not forloop.last %}, {% endif %}  <!-- Show product names -->
+                      {% endfor %}
+                    </td>
+                    <td class="account__table--body__child--items">{{order.payment_method}}</td>
+                    <td class="account__table--body__child--items">
+                      
+                      {% if order.status %}
+                      <i class="fa fa-check"></i> Delivered
+                      {% else %}
+                      <i class="fa fa-clock-o"></i> Pending
+                      {% endif %}
+                    </td>
+                    <td class="account__table--body__child--items">$ {{ order.total }}</td>
+                  </tr>
+                  {% endfor %}
+                
+
+                </tbody>
+                <tbody class="account__table--body mobile__block">
+                  {% for order in user_orders %}
+                  <tr class="account__table--body__child">
+                    <td class="account__table--body__child--items">
+                      <strong>Order ID</strong>
+                      <span>#{{order.order_id}}</span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Date</strong>
+                      <span>{{ order.created_on|date:"Y-m-d H:i:s" }}</span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Product Name</strong>
+                      <span>
+                        {% for item in order.items.all %}  <!-- Loop through order items -->
+                        {{ item.product.name }}{% if not forloop.last %}, {% endif %}  <!-- Show product names -->
+                        {% endfor %}
+                      </span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Payment Status</strong>
+                      <span>Paid</span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Delivery</strong>
+                      <span>
+                        {% if order.status %}
+                        <i class="fa fa-check"></i> Delivered
+                        {% else %}
+                        <i class="fa fa-clock-o"></i> Pending
+                        {% endif %}
+                      </span>
+                    </td>
+                    <td class="account__table--body__child--items">
+                      <strong>Total</strong>
+                      <span>$ {{ order.total }}</span>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="account__table--empty">
+          <h4>no order found</h4>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  <!-- my account section end -->
+  {% endif %}
+
+
+  <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+  {% include "customer/message.html" %}
+  
+{% endblock %}

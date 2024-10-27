@@ -1,0 +1,18 @@
+{% if message %}
+<h5 style="margin-left: 4%;">{{message}}. <a style="color: aqua;" href="{% url 'order_manage' %}">Refresh.</a></h5>
+{% else %}
+<div id="mark_as_done_modal_body">
+    <form id="mark-as-done-form" hx-post="{% url 'mark_order_as_done' order.id %}" hx-target="#mark_as_done_modal_body" hx-swap="outerHTML">
+        {% csrf_token %}
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="flaticon-cancel-12"></i> Cancel
+            </button>
+            <button type="submit" class="btn btn-success">
+                Confirm Order Completion
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endif %}

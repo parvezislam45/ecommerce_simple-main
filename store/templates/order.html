@@ -1,0 +1,189 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="grid sm:px-10 lg:grid-cols-2 lg:px-40 xl:px-40">
+  <div class="mt-10 bg-gray-50 px-32 pt-8 lg:mt-0">
+    <h1 class="text-3xl font-bold">Billing Details</h1>
+
+    <div class="">
+      <label for="email" class="mt-4 mb-2 block text-xl font-bold"
+        >Full Name</label
+      >
+      <input
+        type="text"
+        id="email"
+        name="email"
+        class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-xl shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+        placeholder="Full Name"
+      />
+      <label for="email" class="mt-4 mb-2 block text-xl font-bold"
+        >Phone Number/ Email</label
+      >
+      <input
+        type="text"
+        id="email"
+        name="email"
+        class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-xl shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+        placeholder="Phone Number/ Email"
+      />
+      <label for="email" class="mt-4 mb-2 block text-xl font-bold"
+        >Full Address</label
+      >
+      <input
+        type="text"
+        id="email"
+        name="email"
+        class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-xl shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+        placeholder="Full Address"
+      />
+      <label for="email" class="mt-4 mb-2 block text-xl font-bold"
+        >Country</label
+      >
+      <input
+        type="text"
+        id="email"
+        name="email"
+        class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-xl shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+        placeholder="Country"
+      />
+    </div>
+    <h1 class="text-3xl font-bold mt-10">Payment Option</h1>
+    <div class="flex items-center me-4 mt-10">
+      <input
+        type="radio"
+        id="paymentOption"
+        name="inline-radio-group"
+        class="w-4 h-4 text-blue-600 bg-black"
+      />
+      <a 
+        class="ms-5 text-xl font-medium text-black" 
+        href="javascript:void(0);" 
+        onclick="toggleForm()">Credit and Debit Cards</a>
+        <svg class='w-5 h-5 mx-3' xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-credit-card-fill" viewBox="0 0 16 16"> <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/> </svg>
+    </div>
+    
+    <div id="paymentForm" class="flex flex-col gap-4 mt-4 hidden">
+      <div>
+        <label for="first_name" class="block mb-2 text-2xl font-normal text-gray-900">Card Number</label>
+        <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 placeholder:text-2xl" placeholder="1234 5678 9012 3456"/>
+    </div>
+    <div class='flex gap-5'>
+      <div>
+        <label for="first_name" class="block mb-2 text-2xl font-normal text-gray-900">Expiration date:</label>
+        <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 placeholder:text-2xl" placeholder="MM/YY"/>
+    </div>
+    <div>
+      <label for="first_name" class="block mb-2 text-2xl font-normal text-gray-900">Security code</label>
+      <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 placeholder:text-2xl" placeholder="123"/>
+  </div>
+    </div>
+    <div>
+      <label for="first_name" class="block mb-2 text-2xl font-normal text-gray-900">Cardholder's name:</label>
+      <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 placeholder:text-2xl" placeholder="As Written on Card"/>
+  </div>
+    </div>
+    <div class="flex items-center me-4 mt-5">
+      <input
+        type="radio"
+        value=""
+        name="inline-radio-group"
+        class="w-4 h-4 text-blue-600 bg-black"
+      />
+      <a class="ms-5 text-xl font-medium text-black" href="">Paypal</a>
+    </div>
+  </div>
+  <div class="px-32 pt-8">
+    <p class="text-3xl font-bold">Order Summary</p>
+    <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+      {% for item_id, item in cart.items %}
+      <div
+        id="item-{{ item_id }}"
+        class="flex flex-col justify-between rounded-lg bg-gray-100 sm:flex-row mb-4"
+      >
+        <div
+          class="w-12 h-12 mt-8 rounded-full text-xl bg-white flex justify-center items-center"
+        >
+          <button class="remove" data-id="{{ item_id }}">X</button>
+        </div>
+        <img
+          class="m-2 h-24 w-28 rounded-md border object-cover object-center mx-5"
+          src="{{ item.image }}"
+          alt="{{ item.title }}"
+        />
+        <div class="flex w-full flex-col px-4 py-4">
+          <span class="text-xl font-bold">{{ item.title }}</span>
+          <p class="text-lg font-bold">${{ item.price }}</p>
+        </div>
+      </div>
+      {% endfor %}
+      <div>
+        <div class="flex justify-between items-center mt-5">
+          <p class="font-medium text-xl text-gray-700">Sub Total</p>
+          <p class="font-bold text-xl text-black">
+            ${{ total_price|floatformat:2 }}
+          </p>
+        </div>
+        <div class="flex justify-between items-center">
+          <p class="font-medium text-xl text-gray-700">Free Shipping</p>
+          <p id="total-price">Total Price: ${{ total_price }}</p>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between items-center mt-16">
+          <p class="font-medium text-xl text-gray-700">Total</p>
+          <p class="font-bold text-xl text-black">
+            ${{ total_price|floatformat:2 }}
+          </p>
+        </div>
+        <div class="flex justify-between items-center">
+          <p class="font-medium text-xl text-gray-700">Dalevary Time</p>
+          <p class="font-bold text-xl text-black">2-4 days</p>
+        </div>
+      </div>
+      <div class="mt-16">
+        <button
+          class="text-white w-full bg-black text-xl font-bold mt-4 py-5 focus:outline-none hover:bg-red-600 rounded"
+        >
+          Confirm Order
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".remove").forEach((button) => {
+      button.addEventListener("click", function () {
+        const itemId = this.getAttribute("data-id");
+        fetch("{% url 'cart' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            item_id: itemId,
+            action: "delete",
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.error) {
+              // Refresh the page to reflect the updated cart
+              window.location.reload();
+            } else {
+              console.error(data.error); // Log the error for debugging
+            }
+          });
+      });
+    });
+  });
+</script>
+<script>
+  function toggleForm() {
+    const form = document.getElementById("paymentForm");
+    form.classList.toggle("hidden");
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="relative w-full h-[42rem] overflow-hidden">
+    <div id="carousel" class="absolute w-full flex">
+        <!-- Slide 1 -->
+        <div class="w-full h-[42rem] flex items-center justify-start absolute slide fade-in-out" style="background-image: url('https://cdn.mos.cms.futurecdn.net/4hU7T5fQYWbnU5vxHZnAZE-1200-80.jpg'); background-size: cover; background-position: center;">
+            <div class="text-start slide1-div px-20">
+                <h1 class="text-3xl font-extrabold text-white lg:text-7xl slide-3-h1">Innovative Electronics<br/> Modern Living</h1>
+                <p class="text-2xl text-white font-normal mt-10">Upgrade Your Lifestyle With Cutting-Edge Technology Sleek Design<br/>Shop Today and Enjoy Incredible Discounts</p>
+                <div class="mt-10">
+                    <button class="w-full px-16 py-5 mt-4 text-xl font-bold capitalize transition-colors duration-300 transform bg-white text-black rounded-md lg:w-auto hover:bg-blue-500 focus:outline-none focus:bg-blue-500">Start Buying</button>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="w-full h-[40rem] flex items-center justify-center absolute slide fade-in-out" style="background-image: url('https://plus.unsplash.com/premium_photo-1711136677946-27ffc2a8cf7b?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center;">
+            <div class="text-start slide1-div px-20">
+                <h1 class="text-3xl font-extrabold text-white lg:text-7xl slide-3-h1">Innovative Electronics<br/> Modern Living</h1>
+                <p class="text-2xl text-white font-normal mt-10">Upgrade Your Lifestyle With Cutting-Edge Technology Sleek Design<br/>Shop Today and Enjoy Incredible Discounts</p>
+                <div class="mt-10">
+                    <button class="w-full px-16 py-5 mt-4 text-xl font-bold capitalize transition-colors duration-300 transform bg-white text-black rounded-md lg:w-auto hover:bg-blue-500 focus:outline-none focus:bg-blue-500">Start Buying</button>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="w-full h-[40rem] flex items-center justify-end absolute slide fade-in-out" style="background-image: url('https://cctvsmartsystems.co.uk/wp-content/uploads/2017/06/CCTV-Installers-of-Hikvision-min.jpg'); background-size: cover; background-position: center;">
+            <div class="text-start slide1-div px-20">
+                <h1 class="text-3xl font-extrabold text-white lg:text-7xl slide-3-h1">Innovative Electronics<br/> Modern Living</h1>
+                <p class="text-2xl text-white font-normal mt-10">Upgrade Your Lifestyle With Cutting-Edge Technology Sleek Design<br/>Shop Today and Enjoy Incredible Discounts</p>
+                <div class="mt-10">
+                    <button class="w-full px-16 py-5 mt-4 text-xl font-bold capitalize transition-colors duration-300 transform bg-white text-black rounded-md lg:w-auto hover:bg-blue-500 focus:outline-none focus:bg-blue-500">Start Buying</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation Buttons -->
+    <button id="prev" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none">
+        <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+            <svg class="w-6 h-6 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+            </svg>
+            <span class="sr-only">Previous</span>
+        </span>
+    </button>
+    <button id="next" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none">
+        <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+            <svg class="w-6 h-6 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+            </svg>
+            <span class="sr-only">Next</span>
+        </span>
+    </button>
+</div>
+
+<div>
+    <h1 class='text-center font-bold text-6xl mt-32'>Most Popular Item</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-6 sm:px-12 lg:px-40 mt-20">
+        {% for product in links %}
+        <div class="">
+            <div class="bg-white overflow-hidden border border-gray-300">
+                <img class="w-96 h-80 object-cover" src="{{ product.mainimage.url }}" alt="Product image" />
+                <div class="py-6 px-6 bg-white">
+                    <h1 class="text-gray-700 font-bold text-2xl md:text-3xl mb-3 hover:text-gray-900 hover:cursor-pointer">
+                        {{ product.title }}
+                    </h1>
+                    <div class="text-center group">
+                        <button class="mt-6 py-3 px-10 bg-black text-white font-bold text-md transition duration-300 opacity-0 group-hover:opacity-100">
+                            Buy Now
+                        </button>
+                    </div>  
+                </div>
+            </div>
+        </div>
+        
+        {% endfor %}
+    </div>
+    <div class='text-center mt-16'>
+        <a class=' bg-black text-2xl px-10 py-4 font-medium text-white rounded-2xl' href="{% url 'store' %}">More Product</a>
+        
+    </div>
+
+    <div class='flex justify-center mt-10'>
+        <img class='w-3/5 h-full' src="https://i.postimg.cc/MGQkNVdM/Screenshot-2024-10-25-151811.png" alt="">
+    </div>
+    
+</div>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    let currentIndex = 0;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.style.opacity = i === index ? '1' : '0';
+            slide.style.zIndex = i === index ? '10' : '0';
+            
+            // Show the appropriate heading or div
+            if (i === index) {
+                const currentElement = slide.querySelector('div, .slide-3-div');
+                if (currentElement) {
+                    currentElement.classList.add('active'); // Activate the current element
+                }
+            } else {
+                const currentElement = slide.querySelector('div, .slide-3-div');
+                if (currentElement) {
+                    currentElement.classList.remove('active'); // Deactivate other elements
+                }
+            }
+        });
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % slides.length;
+        showSlide(currentIndex);
+    }
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        showSlide(currentIndex);
+    }
+
+    document.getElementById('next').addEventListener('click', nextSlide);
+    document.getElementById('prev').addEventListener('click', prevSlide);
+
+    setInterval(nextSlide, 5000); // Automatic slide change every 5 seconds
+
+    // Initial slide
+    showSlide(currentIndex);
+</script>
+
+<style>
+    .slide {
+        transition: opacity 1s linear;
+        opacity: 0;
+        z-index: 0;
+    }
+
+    .fade-in-out {
+        transition: opacity 2s ease;
+    }
+
+    /* Bottom to Target Position animation for H1 and div */
+    @keyframes slide-animation {
+        0% {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Active class triggers heading and div animation */
+    .active {
+        animation: slide-animation 1.5s ease forwards;
+    }
+
+    .slide-1-div, .slide-2-div, .slide-3-div {
+        opacity: 0; /* Hide headings and div initially */
+    }
+
+    .slide-1-div.active, .slide-2-div.active, .slide-3-div.active {
+        opacity: 1; /* Show headings and div when active */
+    }
+
+    /* Style for Next and Previous buttons */
+    
+</style>
+  </div>
+  
+
+
+{% endblock %}

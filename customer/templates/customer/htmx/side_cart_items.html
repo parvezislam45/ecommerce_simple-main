@@ -1,0 +1,156 @@
+
+{% if message %}
+<div style="text-align: center; padding: 20px; border: 1px solid #eaeaea; border-radius: 5px; background-color: #f9f9f9; margin: 20px auto; max-width: 400px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+  <h4 style="font-size: 24px; color: #333;">{{ message }}</h4>
+  <p style="font-size: 16px; color: #555;">Please visit
+    <a href="{% url 'shop' %}" style="color: red; font-size: 20px; font-weight: bold; text-decoration: none;">Shop</a> 
+    and Add your product.</p>
+  <p style="font-size: 16px; color: #555;">Thank you!</p>
+</div>
+
+{% else %}
+<div class="minicart" id="minicart">
+<div class="minicart__header" >
+    <div class="minicart__header--top d-flex justify-content-between align-items-center">
+      <h3 class="minicart__title">Shopping Cart</h3>
+      <button class="minicart__close--btn" aria-label="Close sidebar" id="minicartCloseBtn">
+        <svg class="minicart__close--icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M368 368L144 144M368 144L144 368" />
+        </svg>
+      </button>
+    </div>
+    <p class="minicart__header--desc">The original products are limited</p>
+  </div>
+</div>
+  
+  <div class="minicart__product">
+    {% for item in cart_items %}
+    <div class="minicart__product--items d-flex">
+      <div class="minicart__thumbnail">
+        <a href="product-details.html"><img src="{{ item.product.image.url }}" alt="product-img"></a>
+      </div>
+      <div class="minicart__text">
+        <h4 class="minicart__subtitle"><a href="product-details.html">{{ item.product.name }}</a></h4>
+        <div class="minicart__price">
+          <span class="current__price">${{ item.product.price }}</span>
+        </div>
+        <div class="minicart__text--footer d-flex align-items-center">
+            <div class="quantity__box minicart__quantity">
+              
+              {% if item.quantity  > 1 %}
+
+              <a href="#" 
+                hx-get="{% url 'decrease' item.product.id %}" 
+                hx-target="#cart-quantity-{{ item.product.id }}" 
+                hx-swap="outerHTML">
+                <button type="button"
+                    class="quantity__value decrease"
+                    aria-label="quantity value"
+                    value="Decrease Value">-</button></a>
+              {% else %}
+              <button type="button"
+                class="quantity__value decrease"
+                aria-label="quantity value"
+                value="Decrease Value">-</button>
+              {% endif %}
+                
+                <label>
+                    <input type="number" readonly id="cart-quantity-{{ item.product.id }}"
+                        class="quantity__number"
+                        value="{{ item.quantity }}" />
+                </label>
+                <a href="#" 
+                    hx-get="{% url 'increase' item.product.id %}" 
+                    hx-target="#cart-quantity-{{ item.product.id }}" 
+                    hx-swap="outerHTML">
+                  <button type="button"
+                    class="quantity__value increase"
+                    aria-label="quantity value"
+                    value="Increase Value">+</button></a>
+            </div>
+            
+            {% if user.is_authenticated %}
+              
+            {% csrf_token %}
+            <button 
+            class="minicart__product--remove" 
+            hx-post="{% url 'remove_cart_item' item.id %}" 
+            hx-swap="outerHTML" 
+            hx-target="this"
+            hx-trigger="click"
+            hx-confirm="Are you sure you want to remove this item?"
+            hx-on="htmx:afterRequest: if (event.detail.xhr.status === 200 && event.detail.xhr.response.success) window.location.reload();"            >
+            Remove 
+            </button>
+            {% else %}
+            {% csrf_token %}
+            <button 
+            class="minicart__product--remove" 
+            hx-post="{% url 'remove_from_cart' item.product.id %}" 
+            hx-swap="outerHTML" 
+            hx-target="this"
+            hx-trigger="click"
+            hx-confirm="Are you sure you want to remove this item?"
+            hx-on="htmx:afterRequest: if (event.detail.xhr.status === 200 && event.detail.xhr.response.success) window.location.reload();"            >
+            Remove 
+            </button>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if cart_items %}
+  
+<div class="minicart__amount">
+    <div class="minicart__amount_list d-flex justify-content-between">
+        <span>Sub Total:</span>
+        <span id="minicart-subtotal"><b>${{subtotal}}</b></span>  <!-- Subtotal -->
+    </div>
+    <div class="minicart__amount_list d-flex justify-content-between">
+        <span>Total:</span>
+        <span id="minicart-total"><b>${{total}}</b></span>  <!-- Total -->
+    </div>
+    </div>
+
+
+
+    <div class="minicart__button d-flex justify-content-center">
+        {% comment %} <a class="primary__btn minicart__button--link" href="{% url 'cart' %}">View cart</a> {% endcomment %}
+        <a class="primary__btn minicart__button--link" href="{% url 'checkout' %}">Checkout</a>
+    </div>
+</div>
+{% else %}
+  <!-- Cart is empty, display a message -->
+  <div class="minicart__empty text-center">
+      <p>Your cart is empty, please add products.</p>
+      <a class="primary__btn minicart__button--link" href="{% url 'shop' %}">Go to Shop</a>
+  </div>
+{% endif %}
+
+{% endif %}
+
+
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        event.detail.headers['X-CSRFToken'] = csrfToken;
+    });
+</script>
+
+<script>
+  document.getElementById('minicartCloseBtn').addEventListener('click', function() {
+    document.getElementById('minicart').classList.remove('active');  // Hide the minicart
+  });
+</script>
+
+
+<script>
+  // Listen for the 'reloadPage' event triggered by HTMX
+  document.body.addEventListener('htmx:afterRequest', function(evt) {
+      if (evt.detail.trigger === 'reloadPage') {
+          window.location.reload();  // Reload the page
+      }
+  });
+</script>

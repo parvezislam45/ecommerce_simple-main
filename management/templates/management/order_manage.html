@@ -1,0 +1,143 @@
+{% extends 'management/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<!-- BREADCRUMB -->
+<div class="page-meta">
+    <nav class="breadcrumb-style-five" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">order details</li>
+        </ol>
+    </nav>
+</div><br><br>
+<!-- BREADCRUMB END -->
+
+    <!-- Filter -->
+    <form class="row row-cols-lg-auto row g-3 align-items-center" id="filterForm">
+        <div class="col-md-3">
+            <input id="searchInput" type="text" name="q" class="form-control form-control-sm" placeholder="Search order_id Name or Price" aria-label="name" value="{{request.GET.q}}">
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-success for form-control-sm">Search</button>
+            <button type="submit" class="btn btn-warning for form-control-sm"><a href="{% url 'order_manage' %}">Reset</a></button>
+        </div>
+    </form><br>
+    <!-- End Filter -->
+
+<!-- User Table -->
+<div class="row layout-spacing">
+    <div class="col-lg-12">
+        <div class="statbox widget box box-shadow">
+            <div class="table-responsive">
+                <div class="widget-content widget-content-area">
+                    <table id="style-1" class="table style-1 dt-table-hover non-hover">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th class="text-center">Customer Name</th>
+                                <th>Product</th>
+                                <th>quantity</th>
+                                <th>Total price</th>
+                                <th>Status</th>
+                                <th>Assigned_on</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <th><a style="font-weight: bold;" href="{% url 'order_details' order.id %}">{{order.order_id}}</th></a>
+                                <td class="checkbox-column">
+                                    <a style="font-weight: bold;" href="{% url 'order_details' order.id %}">
+                                        
+                                        {% if order.user %}
+                                            {{ order.user.get_full_name }}
+                                        {% else %}
+                                            {{ order.first_name }}
+                                        {% endif %}
+                                            
+                                    </a>
+                                </td>
+                              
+                                <td> 
+                                    <ul>
+                                        {% for item in order.items.all %}
+                                        <li>{{ item.product.name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>
+                                    {% for item in order.items.all %}
+                                    <li>{{ item.quantity }}</li>
+                                    {% endfor %}
+                                </td>
+                                <td>{{order.total}}</td>
+                                
+                                {% if order.status %}
+                                <td><span class="shadow-none badge badge-primary">Completed</span></td>
+                                {% else %}
+                                <td><span class="shadow-none badge badge-danger">Pending</span></td>
+                                {% endif %}
+
+                                <td>
+                                   {{order.created_on}}
+                                </td>
+                                
+
+                                <td class="text-center">
+                                    {% if order.status is True %}
+                                        <span class="shadow-none badge badge-primary">Done</span>
+                                    {% else %}
+                                        <!-- Show the Mark as Done button only if status is not True -->
+                                        <a href="#" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#mark_as_done_modal" 
+                                        hx-get="{% url 'mark_order_as_done' order.id %}" 
+                                        hx-target="#mark_as_done_modal_body" 
+                                        class="btn btn-success">
+                                            <svg style="margin-right: 7px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle">
+                                                <path d="M12 21c4.97 0 9-4.03 9-9S16.97 3 12 3 3 7.03 3 12s4.03 9 9 9z"></path>
+                                                <path d="M9 12l2 2 4-4"></path>
+                                            </svg>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End User Table -->
+
+
+<!-- Mark as Done Modal -->
+<div class="modal fade" id="mark_as_done_modal" tabindex="-1" role="dialog" aria-labelledby="markAsDoneModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="markAsDoneModalLabel">Confirm Order Completion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="mark_as_done_modal_body">
+                <!-- HTMX will load the content here -->
+
+            </div>
+        </div>
+    </div>
+</div>
+  
+
+
+{% endblock %}
+    

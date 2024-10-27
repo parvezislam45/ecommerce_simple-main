@@ -1,0 +1,92 @@
+{% load static %}
+{% block head %}
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/src/table/datatable/datatables.css' %}">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/css/light/table/datatable/dt-global_style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/css/dark/table/datatable/dt-global_style.css' %}">
+    <!--  END CUSTOM STYLE FILE  -->
+
+    <style>
+        #ecommerce-list img {
+            border-radius: 18px;
+        }
+    </style>
+    <script src="{% static 'management/plugins/src/table/datatable/datatables.js' %}"></script>
+
+
+    {% comment %} edit css {% endcomment %}
+
+    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    <link rel="stylesheet" href="{% static 'management/plugins/src/filepond/filepond.min.css' %}">
+    <link rel="stylesheet" href="{% static 'management/plugins/src/filepond/FilePondPluginImagePreview.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/src/tagify/tagify.css' %}">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'management/assets/css/light/forms/switches.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/css/light/editors/quill/quill.snow.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/css/light/tagify/custom-tagify.css' %}">
+    <link href="{% static 'management/plugins/css/light/filepond/custom-filepond.css' %}" rel="stylesheet" type="text/css" />
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'management/assets/css/dark/forms/switches.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/css/dark/editors/quill/quill.snow.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/css/dark/tagify/custom-tagify.css' %}">
+    <link href="{% static 'management/plugins/css/dark/filepond/custom-filepond.css' %}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link rel="stylesheet" href="{% static 'management/assets/css/light/apps/ecommerce-create.css' %}">
+    <link rel="stylesheet" href="{% static 'management/assets/css/dark/apps/ecommerce-create.css' %}">
+    <!--  END CUSTOM STYLE FILE  -->
+
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="{% static 'management/plugins/src/editors/quill/quill.js' %}"></script>
+    <script src="{% static 'management/plugins/src/filepond/filepond.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/filepond/FilePondPluginFileValidateType.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/filepond/FilePondPluginImageExifOrientation.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/filepond/FilePondPluginImagePreview.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/filepond/FilePondPluginImageCrop.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/filepond/FilePondPluginImageResize.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/filepond/FilePondPluginImageTransform.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/filepond/filepondPluginFileValidateSize.min.js' %}"></script>
+
+    <script src="{% static 'management/plugins/src/tagify/tagify.min.js' %}"></script>
+    <script src="{% static 'management/assets/js/apps/ecommerce-create.js' %}"></script>
+
+    <script>
+        ecommerce.addFiles('% static 'management/assets/img/product-1.jpg' %}', '../src/assets/img/product-3.jpg', '../src/assets/img/product-5.jpg');
+    </script>
+
+    <!-- END PAGE LEVEL SCRIPTS -->
+
+
+
+    {% comment %} details {% endcomment %}
+    
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/src/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/src/glightbox/glightbox.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/plugins/src/splide/splide.min.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'management/assets/css/light/components/tabs.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/assets/css/light/apps/ecommerce-details.css' %}">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'management/assets/css/dark/components/tabs.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/assets/css/dark/apps/ecommerce-details.css' %}">
+    <!--  END CUSTOM STYLE FILE  -->
+
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="{% static 'management/plugins/src/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/glightbox/glightbox.min.js' %}"></script>
+    <script src="{% static 'management/plugins/src/splide/splide.min.js' %}"></script>
+    <script src="{% static 'management/assets/js/apps/ecommerce-details.js' %}"></script>    
+    <!-- END PAGE LEVEL SCRIPTS --> 
+
+    {% comment %} add product {% endcomment %}
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link rel="stylesheet" href="{% static 'management/assets/css/light/apps/ecommerce-create.css' %}">
+    <link rel="stylesheet" href="{% static 'management/assets/css/dark/apps/ecommerce-create.css' %}">
+    <!--  END CUSTOM STYLE FILE  -->
+    
+{% endblock head %}
+
+    

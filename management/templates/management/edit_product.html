@@ -1,0 +1,65 @@
+{% extends 'management/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div class="page-meta">
+    <nav class="breadcrumb-style-five" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product' %}">Product list</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Product</li>
+        </ol>
+    </nav>
+</div><br><br>
+
+<!-- /BREADCRUMB -->
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row mb-4">
+        <div class="col-sm-12">
+            <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{ product.name }}">
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <label for="product-images">Upload Product Images</label>
+            <input type="file" name="images" accept="image/*" multiple>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-sm-12">
+            <label>Description</label>
+            <textarea name="description" class="form-control" placeholder="Product Description">{{ product.description }}</textarea>
+        </div>
+    </div>
+
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <label for="product-images">Upload Description Images</label>
+            <input type="file" name="des_images" accept="image/*" multiple>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-xxl-12 col-md-6 mb-4">
+            <label for="sale-price">Sale Price</label>
+            <input type="text" name="sale_price" class="form-control" value="{{ product.price }}">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mt-4">Update Product</button>
+</form>
+
+
+
+{% include 'management/utils/css_table.html' %}
+
+
+{% endblock %}
+    

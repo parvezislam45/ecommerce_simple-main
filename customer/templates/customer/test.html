@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* White background */
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Popup Overlay */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Popup Content */
+        .popup-content {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Popup Header */
+        .popup-content h2 {
+            margin-top: 0;
+            color: black; /* Green color for success */
+        }
+
+        /* Popup Message */
+        .popup-content p {
+            font-size: 18px;
+            margin: 20px 0;
+            color: #333333;
+        }
+
+        /* Buttons Container */
+        .popup-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Buttons Styling */
+        .popup-buttons button {
+            background-color: black;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .popup-buttons button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Secondary Button Styling */
+        .popup-buttons .secondary-btn {
+            background-color: #6c757d;
+        }
+
+        .popup-buttons .secondary-btn:hover {
+            background-color: #5a6268;
+        }
+
+        /* Animation for Popup */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+    <script>
+        // Function to show popup when the page loads
+        window.onload = function () {
+            var messageElement = document.getElementById('orderSuccessPopup');
+            if (messageElement) {
+                // Show popup with order confirmation message
+                document.getElementById('popupOverlay').style.display = 'flex';
+            }
+        }
+
+        // Redirect to Home Page
+        function goToHome() {
+            window.location.href = '/';  // Replace with your actual home URL
+        }
+
+        // Continue Shopping (Assuming it redirects to the shop page)
+        function continueShopping() {
+            window.location.href = '/shop/';  // Replace with your actual shop URL
+        }
+    </script>
+</head>
+
+<body>
+    <!-- Order Confirmation Popup Overlay -->
+    <div id="popupOverlay" class="popup-overlay">
+        <div class="popup-content">
+            <h2>Error</h2>
+            <p id="orderSuccessPopup">Our website is currently under maintenance, so we are unable to process your order at this time. We are working diligently to resolve this issue as soon as possible.</p>
+            <div class="popup-buttons">
+                <button onclick="goToHome()">Go to Home</button>
+            </div>
+        </div>
+    </div>
+
+ 
+</body>
+
+</html>

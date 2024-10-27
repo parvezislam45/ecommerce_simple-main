@@ -1,0 +1,326 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block head %}
+<!-- CSS for the Loading Spinner -->
+<style>
+    .loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.7);
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .spinner {
+        border: 5px solid rgba(0, 0, 0, 0.1);
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Optionally, you can style the product details */
+    .product-details {
+        /* Style for product details */
+    }
+</style>
+{% endblock head %}
+
+{% block content %}
+<!-- Loading Spinner (Initially Visible) -->
+<div id="loading-spinner" class="loading-spinner" style="display: none;">
+    {% comment %} <div class="spinner"></div> {% endcomment %}
+</div>
+
+<div id="product-details" class="product-details" style="display: none;">
+
+    <!-- Start product details section -->
+    <section class="product__details--section section--padding">
+
+        <div class="container">
+            <div class="row row-cols-lg-2 row-cols-md-2">
+                <div class="col">
+                    <div class="product__details--media">
+                        <div class="product__media--preview swiper" id="main-image-swiper">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="product__media--preview__items">
+                                        <a class="product__media--preview__items--link " data-gallery="product-media-preview" id="main-image-link">
+                                            <img class="product__media--preview__items--img" id="main-image" src="{{ product.image.url }}" style="width: 846%;height: 885%;" alt="product-media-img">
+                                        </a>
+                                        <div class="product__media--view__icon">
+                                            <a class="product__media--view__icon--link glightbox" id="main-image-lightbox" href="{{ product.image.url }}" data-gallery="product-media-preview">
+                                                <svg class="product__media--view__icon--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="22.443" viewBox="0 0 512 512">
+                                                    <path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path>
+                                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path>
+                                                </svg>
+                                                <span class="visually-hidden">Media Gallery</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Loop through all images for main display -->
+                                {% for image in product.images.all %}
+                                <div class="swiper-slide">
+                                    <a class="product__media--preview__items--link glightbox" data-gallery="product-media-preview">
+                                        <img class="product__media--preview__items--img" src="{{ image.image.url }}" alt="product-media-img">
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="product__media--nav swiper" id="thumbnail-swiper">
+                            <div class="swiper-wrapper">
+                                {% for image in product.images.all %}
+                                <div class="swiper-slide">
+                                    <div class="product__media--nav__items">
+                                        <img class="product__media--nav__items--img product-thumbnail" src="{{ image.image.url }}" alt="{{ product.name }} image" data-image-url="{{ image.image.url }}">
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="swiper__nav--btn swiper-button-next"></div>
+                            <div class="swiper__nav--btn swiper-button-prev"></div>
+                        </div>
+                    </div>
+                </div>   
+                <div class="col">
+                    <div class="product__details--info">
+                        {% comment %} <form> {% endcomment %}
+                            <h2 class="product__details--info__title mb-15">{{product.name}}</h2>
+                            <div class="product__details--info__price mb-10">
+                                <span class="current__price">${{product.price}}</span>
+                                {% comment %} <span class="old__price">$320.00</span> {% endcomment %}
+                            </div>
+                           
+                            <p class="product__details--info__desc mb-20">{{product.description|truncatechars:50}}.</p>
+                            <div class="product__variant">
+                                <div class="product__variant--list mb-20">
+                                    <fieldset class="variant__input--fieldset">
+                                       
+                                    </fieldset>
+                                </div>
+                                <div class="product__variant--list mb-20">
+                                 
+                                </div>
+                                <div class="product__variant--list quantity d-flex align-items-center mb-20">
+                                    <div class="quantity__box">
+                                        {% if quantity > 1 %}
+                                        <a href="#" 
+                                            hx-get="{% url 'decrease' product.id %}" 
+                                            hx-target="#cart-quantity-{{ product.id }}" 
+                                            hx-swap="outerHTML">
+                                            <button type="button" class="quantity__value quickview__value--quantity decrease" aria-label="quantity value" value="Decrease Value">-</button></a>
+                                            {% else %}
+                                            <button type="button" class="quantity__value quickview__value--quantity decrease" aria-label="quantity value" value="Decrease Value">-</button>
+                                        {% endif %}
+                                        <label>
+                                            <input type="number" id="cart-quantity-{{ product.id }}" class="quantity__number quickview__value--number" readonly value="{{quantity}}" />
+                                        </label>
+                                        <a href="#" 
+                                            hx-get="{% url 'increase' product.id %}" 
+                                            hx-target="#cart-quantity-{{ product.id }}" 
+                                            hx-swap="outerHTML">
+                                        <button type="button" class="quantity__value quickview__value--quantity increase" aria-label="quantity value" value="Increase Value">+</button>
+                                        </a>
+                                    </div>
+                                    
+                                    {% comment %} {% if user.is_authenticated %}
+                                        {% if product.id in cart_product_ids %}
+                                        <button class="quickview__cart--btn primary__btn" type="submit"><a href="{% url 'cart' %}">Go To Cart</button></a>
+
+                                        {% else %}
+                                        <form action="{% url 'add_to_cart' product.id %}">
+                                            <button class="quickview__cart--btn primary__btn" type="submit">Add To Cart</button>
+                                        </form>
+                                        {% endif %}
+                                    {% else %}
+                                    <a href="{% url 'add_to_cart' product.id %}"><button class="quickview__cart--btn primary__btn" type="submit">add to cart</button></a>
+
+                                    {% endif %} {% endcomment %}
+                                </div>
+                                <div class="product__variant--list mb-15">
+                                    {% comment %} <a class="variant__wishlist--icon mb-15" href="{% url 'wishlist' %}" title="Add to wishlist">
+                                        <svg class="quickview__variant--wishlist__svg" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 512 512"><path d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64c-52.76 0-94.54 44.14-95.08 96.81-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0018 0c96.26-65.34 184.09-143.09 183-252.42-.54-52.67-42.32-96.81-95.08-96.81z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                                        Add to Wishlist
+                                    </a> {% endcomment %}
+                                    <form action="{% url 'add_to_cart' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button class="variant__buy--now__btn primary__btn" type="submit">Buy Now</button>
+                                    </form>
+                                    
+                                </div>
+                                <div class="product__variant--list mb-15">
+                                    
+                                </div>
+                            </div>
+                            
+                            <div class="guarantee__safe--checkout">
+                                <h5 class="guarantee__safe--checkout__title">Guaranteed Safe Checkout</h5>
+                                <img class="guarantee__safe--checkout__img" src="{% static 'customer/img/other/safe-checkout.webp' %}" alt="Payment Image">
+                            </div>
+                        {% comment %} </form> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End product details section -->
+
+    <!-- Start product details tab section -->
+    <section class="product__details--tab__section section--padding">
+        <div class="container">
+            <div class="row row-cols-1">
+                <div class="col">
+                    <ul class="product__details--tab d-flex mb-30">
+                        <li class="product__details--tab__list active" data-toggle="tab" data-target="#description">Description</li>
+                    </ul>
+                    <div class="product__details--tab__inner border-radius-10">
+                        <div class="tab_content">
+                            <div id="description" class="tab_pane active show">
+                                <div class="product__tab--content">
+                                    <div class="product__tab--content__right">
+                                        <div class="product__tab--content__step mb-20">
+                                            <p class="product__tab--content__desc">{{product.description}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="product__tab--content__items mb-40 d-flex align-items-center">
+                                        {% for image in product.description_images.all %}
+                                        <div class="product__tab--content__thumbnail">
+                                            <img class="product__tab--content__thumbnail--img display-block" src="{{ image.image.url }}" style="width: 846px;height: 255px;" alt="description_images">
+                                            {% if image.caption %}
+                                                <p class="image-caption">{{ image.caption }}</p>
+                                            {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                        
+                                    </div> 
+                                    
+                                </div> 
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End product details tab section -->
+</div>
+
+<script>
+    function changeQuantity(productId, change) {
+        const quantityInput = document.getElementById(`quantity-${productId}`);
+        let currentQuantity = parseInt(quantityInput.value);
+    
+        // Update quantity based on button clicked
+        if (change === 1) {
+            currentQuantity += 1; // Increase quantity
+        } else if (change === -1 && currentQuantity > 1) {
+            currentQuantity -= 1; // Decrease quantity
+        }
+    
+        // Set the updated quantity back to the input
+        quantityInput.value = currentQuantity;
+    }
+    
+    function submitQuantity(productId) {
+        const form = document.getElementById(`quantity-box-${productId}`);
+        const formData = new FormData(form);
+    
+        // Send the updated quantity to the server
+        fetch(form.action, {
+            method: 'POST',
+            body: formData // Send the FormData object
+        })
+        .then(response => {
+            if (response.ok) {
+                // Redirect to the cart page after successful update
+                window.location.href = '/cart/'; // Change this to your redirect URL
+            } else {
+                console.error('Error updating quantity:', response);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+        
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Show the loading spinner
+        document.getElementById('loading-spinner').style.display = 'flex';
+
+        // Ensure your data or page is fully loaded
+        window.addEventListener('load', function () {
+            // Hide the loading spinner and show the product details
+            document.getElementById('loading-spinner').style.display = 'none';
+            document.getElementById('product-details').style.display = 'block';
+        });
+    });
+</script>
+
+
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize the main image swiper
+        const mainImageSwiper = new Swiper('#main-image-swiper', {
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        // Initialize the thumbnail swiper
+        const thumbnailSwiper = new Swiper('#thumbnail-swiper', {
+            spaceBetween: 10,
+            slidesPerView: 4, // Adjust this based on how many thumbnails you want visible
+            loop: true,
+            slideToClickedSlide: true, // Enable clicking thumbnails to change main image
+        });
+
+        // Synchronize main image with thumbnails
+        const mainImage = document.getElementById('main-image');
+        const mainImageLink = document.getElementById('main-image-link');
+        const mainImageLightbox = document.getElementById('main-image-lightbox');
+
+        const thumbnails = document.querySelectorAll('.product-thumbnail');
+
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener('click', function () {
+                const newImageUrl = this.getAttribute('data-image-url');
+                
+                // Update the main image and lightbox link
+                mainImage.src = newImageUrl;
+                mainImageLink.href = newImageUrl;
+                mainImageLightbox.href = newImageUrl;
+
+                // Update the main image swiper to show the corresponding image
+                mainImageSwiper.slideTo(index);
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+    

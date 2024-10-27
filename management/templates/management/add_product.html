@@ -1,0 +1,101 @@
+{% extends 'management/base.html' %}
+{% load static %}
+
+{% block head %}
+    <!-- FilePond CSS -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
+    <!-- FilePond JS -->
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+{% endblock %}
+
+{% block content %}
+    <!-- BREADCRUMB -->
+    <div class="page-meta">
+        <nav class="breadcrumb-style-five" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Home</a></li>
+                <li class="breadcrumb-item" aria-current="page"><a href="{% url 'product' %}"> Product list</li></a>
+                <li class="breadcrumb-item active" aria-current="page">Add Product</li>
+            </ol>
+        </nav>
+    </div><br><br>
+
+    <!-- /BREADCRUMB -->
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row mb-4">
+            <div class="col-sm-12">
+                <input type="text" name="product_name" class="form-control" placeholder="Product Name">
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <label for="product-images">Upload Product Images</label>
+                <input type="file" name="images" accept="image/*" multiple>
+            </div>
+        </div>
+    
+        <div class="row mb-4">
+            <div class="col-sm-12">
+                <label>Description</label>
+                <textarea name="description" class="form-control" placeholder="Product Description"></textarea>
+            </div>
+        </div>
+    
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <label for="product-images">Upload Description Images</label>
+                <input type="file" name="des_images" accept="image/*" multiple>
+            </div>
+        </div>
+
+        {% comment %} <input type="file" class="filepond" name="file" multiple>
+        <input type="hidden" id="uploaded_file_path" name="uploaded_file_path">  {% endcomment %}
+
+
+        <div class="row mb-4">
+            <div class="col-xxl-12 col-md-6 mb-4">
+                <label for="sale-price">Sale Price</label>
+                <input type="text" name="sale_price" class="form-control">
+            </div>
+        </div>
+
+    
+        <button type="submit" class="btn btn-success w-100">Add Product</button>
+    </form>
+    
+
+    {% include 'management/utils/css_table.html' %}
+
+ 
+    <script>
+        const inputElement = document.querySelector('.filepond');
+        const pond = FilePond.create(inputElement, {
+            allowMultiple: true,
+            maxFiles: 5,
+            server: {
+                process: {
+                    url: '/management/upload/',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    onload: (response) => {
+                        // Assuming the server returns a JSON object with file_path
+                        const filePath = JSON.parse(response).file_path;
+                        // Set the hidden input field's value to the file path
+                        document.getElementById('uploaded_file_path').value = filePath;
+                    }
+                },
+                revert: '/management/revert/',
+            }
+        });
+
+    </script>
+
+    
+{% endblock %}
+    

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Navbar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <nav class="bg-white p-4">
+    <div class="px-28 mx-auto flex items-center justify-between flex-wrap">
+      <div class="block md:hidden">
+        <button id="menu-btn" class="text-black focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="text-gray-700 text-3xl font-bold">
+        <a href="#">BUYVENTURE</a>
+      </div>
+      <div class="hidden md:flex md:flex-grow justify-center space-x-12 text-black">
+        <a href="{% url 'home' %}" class="py-2 text-2xl">Home</a>
+        <a href="{% url 'store' %}" class="py-2 text-2xl">Shop</a>
+        <a href="#" class="py-2 text-2xl">About Us</a>
+        <a href="#" class="py-2 text-2xl">Blog</a>
+        <a href="#" class="py-2 text-2xl">Contact</a>
+      </a>
+      </div>
+      <div class="text-white">
+        <button id="cart-btn" class="relative inline-flex items-center mt-2">
+          <svg class='w-9 h-9' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" fill-rule="evenodd" d="M80,176a16,16,0,0,0-16,16V408c0,30.24,25.76,56,56,56H392c30.24,0,56-24.51,56-54.75V192a16,16,0,0,0-16-16Z"/><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" fill-rule="evenodd" d="M160,176V144a96,96,0,0,1,96-96h0a96,96,0,0,1,96,96v32"/></svg>
+            <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-black border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">{{cart_length }}</div>
+        </button>
+      
+      </div>
+    </div>
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-30 hidden"></div>
+    <div id="mobile-menu" class="hidden flex-col items-center bg-white mt-4 md:hidden">
+      <div class="flex justify-between items-center w-full">
+        <div class="text-black text-2xl font-bold">
+          <a href="#">BUYVENTURE</a>
+        </div>
+        <button id="close-btn" class="text-black focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <a href="{% url 'home' %}" class="block py-2 text-black text-start">Home</a>
+      <a href="{% url 'store' %}" class="block py-2 text-black text-start">Shop</a>
+      <a href="#" class="block py-2 text-black text-start">About Us</a>
+      <a href="#" class="block py-2 text-black text-start">Blog</a>
+      <a href="#" class="block py-2 text-black text-start">Contact</a>
+    </div>
+  </nav>
+  <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 md:w-[30rem] z-50">
+    <div class="p-4 flex justify-between items-center border-b">
+      <h2 class="text-4xl font-bold">Shopping Cart</h2>
+      <button id="drawer-close-btn" class="text-black focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </div>
+    <p class='px-4 text-2xl text-gray-800'>The original products are limited</p>
+    <div class="p-4">
+        
+          <div class="flex flex-col">
+            {% for item_id, item in cart.items %}
+            <div class="flex flex-col rounded-lg bg-white sm:flex-row mb-4" data-item-id="{{ item.id }}">
+                <img class="m-2 h-24 w-28 rounded-md border object-cover object-center" src="{{ item.image }}" alt="">
+                <div class="flex w-full flex-col px-4 py-4">
+                    <span class="text-md font-bold">{{ item.title }}</span>
+                    <p class="text-lg font-bold price" data-price="{{ item.price }}">${{ item.price|floatformat:2 }}</p>
+                    <div class="sm:order-1">
+                        <div class="flex h-8 w-10 mt-5 justify-start text-gray-600">
+                            <button type="button" class="decrease flex items-center justify-center rounded-l-md bg-gray-200 text-black px-4 transition hover:bg-black hover:text-white">-</button>
+                            <input type="number" class="quantity flex w-16 items-center justify-center bg-gray-100 text-black text-xl text-center" value="{{ item.quantity }}" min="1" readonly>
+                            <button type="button" class="increase flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white">+</button>
+                            <button class="remove text-md font-bold uppercase underline mx-3" data-id="{{ item_id }}">Remove</button>
+                          </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            {% endfor %}
+            <!-- Display Subtotal and Total -->
+            <div class="flex justify-between items-center mt-5">
+                <p class="font-medium text-xl text-gray-700">Sub Total</p>
+                <p class="font-bold text-xl text-black total-price">${{ total_price|floatformat:2 }}</p>
+            </div>
+            <div class="flex justify-between items-center mt-5">
+                <p class="font-medium text-xl text-gray-700">Total</p>
+                <p class="font-bold text-xl text-black total-price">${{ total_price|floatformat:2 }}</p>
+            </div>
+            
+            <!-- Checkout Button -->
+            <div class="mt-5 text-center">
+                <button class="text-white bg-black text-xl font-bold py-2 px-3 rounded">
+                    Checkout
+                </button>
+            </div>
+          </div>
+    </div>
+    </div>
+  </div>
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const quantityInput = document.getElementById('quantity');
+      const increaseButton = document.getElementById('increase');
+      const decreaseButton = document.getElementById('decrease');
+  
+      increaseButton.addEventListener('click', function() {
+        let currentQuantity = parseInt(quantityInput.value);
+        quantityInput.value = currentQuantity + 1; // Increment the quantity
+      });
+  
+      decreaseButton.addEventListener('click', function() {
+        let currentQuantity = parseInt(quantityInput.value);
+        if (currentQuantity > 1) {
+          quantityInput.value = currentQuantity - 1; // Decrement the quantity if greater than 1
+        }
+      });
+    });
+  </script>
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const closeBtn = document.getElementById('close-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const cartBtn = document.getElementById('cart-btn');
+    const cartDrawer = document.getElementById('cart-drawer');
+    const drawerCloseBtn = document.getElementById('drawer-close-btn');
+    const overlay = document.getElementById('overlay');
+  
+    // Toggle mobile menu
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  
+    closeBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  
+    // Open cart drawer when Cart button is clicked
+    cartBtn.addEventListener('click', () => {
+      cartDrawer.classList.remove('translate-x-full'); // Open the drawer
+      overlay.classList.remove('hidden'); // Show the background overlay
+    });
+  
+    // Close cart drawer when close button is clicked
+    drawerCloseBtn.addEventListener('click', () => {
+      cartDrawer.classList.add('translate-x-full'); // Close the drawer
+      overlay.classList.add('hidden'); // Hide the background overlay
+    });
+  
+    // Also close the drawer if clicking on the overlay
+    overlay.addEventListener('click', () => {
+      cartDrawer.classList.add('translate-x-full');
+      overlay.classList.add('hidden');
+    });
+  </script>
+  <script>
+    document.querySelectorAll('.increase').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemDiv = this.closest('[data-item-id]');
+            const quantityInput = itemDiv.querySelector('.quantity');
+            const priceElement = itemDiv.querySelector('.price');
+            const price = parseFloat(priceElement.getAttribute('data-price'));
+            let quantity = parseInt(quantityInput.value);
+
+            quantity += 1;
+            quantityInput.value = quantity;
+
+            // Update subtotal
+            const subtotal = parseFloat(document.querySelector('.total-price').textContent.replace('$', ''));
+            const newSubtotal = subtotal + price;
+            document.querySelectorAll('.total-price').forEach(el => el.textContent = `$${newSubtotal.toFixed(2)}`);
+        });
+    });
+
+    document.querySelectorAll('.decrease').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemDiv = this.closest('[data-item-id]');
+            const quantityInput = itemDiv.querySelector('.quantity');
+            const priceElement = itemDiv.querySelector('.price');
+            const price = parseFloat(priceElement.getAttribute('data-price'));
+            let quantity = parseInt(quantityInput.value);
+
+            if (quantity > 1) {
+                quantity -= 1;
+                quantityInput.value = quantity;
+
+                // Update subtotal
+                const subtotal = parseFloat(document.querySelector('.total-price').textContent.replace('$', ''));
+                const newSubtotal = subtotal - price;
+                document.querySelectorAll('.total-price').forEach(el => el.textContent = `$${newSubtotal.toFixed(2)}`);
+            }
+        });
+    });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.remove').forEach(button => {
+        button.addEventListener('click', function () {
+            const itemId = this.getAttribute('data-id');
+            fetch("{% url 'cart' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    item_id: itemId,
+                    action: 'delete'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.error) {
+                    document.querySelector(`#item-${itemId}`).remove(); // Remove item from the DOM
+                    const totalPriceElement = document.querySelector('#total-price'); 
+                    if (totalPriceElement) { 
+                        totalPriceElement.textContent = `$${data.total_price.toFixed(2)}`; // Update total price
+                    }
+                } else {
+                    console.error(data.error); // Log the error for debugging
+                }
+            });
+        });
+    });
+});
+</script>
+</body>
+</html>

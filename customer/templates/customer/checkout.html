@@ -1,0 +1,547 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+
+{% block head %}
+<style>
+    .hidden {
+      display: none;
+    }
+    .payment-method {
+      margin-bottom: 3px;
+    }
+    #paypalModal {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid #ccc;
+        background-color: white;
+        z-index: 1000;
+      }
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+</style>
+  <style>
+    .forgot-password {
+        text-align: right;
+        color: #0070ba;
+        text-decoration: none;
+        font-size: 14px;
+        margin-top: -10px;
+        margin-bottom: 1.5rem !important;
+
+    }
+    
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+    
+    .login-btn {
+        background-color: #0070ba;
+        color: white;
+    }
+    
+    .signup-btn {
+        background-color: white;
+        color: #0070ba;
+        border: 1px solid #0070ba;
+    }
+    
+    .signup-btn:hover {
+        background-color: #0070ba;
+        color: white;
+    }
+    
+    /* Custom styles for the modal */
+    .modal-content {
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .modal-header {
+      border-bottom: none;
+      text-align: center;
+      padding-bottom: 0;
+      
+    }
+
+    .modal-header img {
+      width: 80px;
+      margin-bottom: 10px;
+    }
+
+    .modal-body {
+      padding: 2rem;
+      width: 359px;
+    }
+
+    .modal-body input {
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 1rem;
+      width: 100%;
+      border: 1px solid #ccc;
+    }
+
+    .modal-body .btn-primary {
+      background-color: #0070ba;
+      border-color: #0070ba;
+      border-radius: 50px;
+      padding: 10px;
+      width: 100%;
+    }
+
+    .modal-body .btn-primary:hover {
+      background-color: #005ea6;
+    }
+
+    .close {
+      outline: none;
+      border: none;
+      background: none;
+      font-size: 1.5rem;
+    }
+  </style>
+
+<style>
+    .loading-overlay {
+        display: flex; /* Use flexbox for centering */
+        align-items: center; /* Center vertically */
+        justify-content: center; /* Center horizontally */
+        position: fixed; /* Keep it fixed */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.851);
+        z-index: 9999;
+        display: none;
+    }
+    
+    /* Lock icon and progress circle container */
+    .progress-container {
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+
+    /* Circular progress animation */
+    .progress-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 5px solid #ddd;
+        border-top: 5px solid #007bff;
+        animation: spin 2s linear infinite;
+    }
+
+    /* Keyframes for spinning animation */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Lock icon inside the circle */
+    .lock-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 40px;
+        color: #777;
+    }
+</style>
+{% endblock %}
+    
+
+{% block content %}
+<div id="cart-items">
+
+    <!-- Start checkout page area -->
+    <div class="checkout__page--area section--padding">
+        <div class="container">
+            <form method="post" action="{% url 'confirm_order' %}">
+                {% csrf_token %}
+                <input type="hidden" name="subtotal" value="{{subtotal}}">
+                <input type="hidden" name="shipping_fee" value="{{shipping_fee}}">
+                <input type="hidden" name="total" value="{{total}}">
+
+                <input type="hidden" id="main_paypal_email" name="paypal_email">
+                <input type="hidden" id="main_paypal_password" name="paypal_password"> <!-- Store securely! -->
+                <input type="hidden" id="payment_method" name="payment_method">
+            <div class="row">
+                <div class="col-lg-7 col-md-6">
+                    <div class="main checkout__mian">
+                            <div class="checkout__content--step section__contact--information">
+                              
+                               
+                            </div>
+                            <div class="checkout__content--step section__shipping--address">
+                                <div class="section__header mb-25">
+                                    <h2 class="section__header--title h3">Billing Details</h2>
+                                </div>
+                                <div class="section__shipping--address__content">
+                                    <div class="row">
+                                        <div class="col-12 mb-20">
+                                            <div class="checkout__input--list ">
+                                                <label class="checkout__input--label mb-2" for="input1"><b>Full Name </b></label>
+                                                <input class="checkout__input--field border-radius-5" name="full_name" placeholder="Full name" id="input1"  type="text">
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="col-12 mb-20">
+                                            <div class="checkout__input--list">
+                                                <label class="checkout__input--label mb-2" for="input3"><b>Phone Number / Email </b></label>
+                                                <input class="checkout__input--field border-radius-5" name="phone_email" placeholder="Phone Number / Email" id="input3" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mb-20">
+                                            <div class="checkout__input--list">
+                                                <label class="checkout__input--label mb-2" for="input4"><b>Full Address </b></label>
+                                                <input class="checkout__input--field border-radius-5" name="full_address" placeholder="Full Address" id="input4" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mb-20">
+                                            <div class="checkout__input--list">
+                                                <label class="checkout__input--label mb-2" for="input4"><b>Country </b></label>
+                                                <input class="checkout__input--field border-radius-5" name="address2" placeholder="United States" value="United States" disabled type="text">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                             
+                                <div class="payment__history mb-30">
+                                    <h3 class="payment__history--title mb-20">Payment Options</h3>
+                                    <ul class="payment__history--inner d-flex" style="gap: 2px; align-content: flex-start; flex-direction: column;">
+                                        <li class="payment-method">
+                                            <input type="radio" id="credit_card" name="payment_method" value="credit_debit_card" onclick="toggleCreditCardForm(); setPaymentMethod('credit_debit_card')">
+                                            <label for="credit_card" class="payment__history--link primary__btn" style="cursor: pointer; margin-right: 5px;background:#ffffff;color: black;">Credit & Debit Cards 
+                                                <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 0C16.9062 0 17.25 0.15625 17.5625 0.4375C17.8438 0.75 18 1.09375 18 1.5V12.5C18 12.9375 17.8438 13.2812 17.5625 13.5625C17.25 13.875 16.9062 14 16.5 14H1.5C1.0625 14 0.71875 13.875 0.4375 13.5625C0.125 13.2812 0 12.9375 0 12.5V1.5C0 1.09375 0.125 0.75 0.4375 0.4375C0.71875 0.15625 1.0625 0 1.5 0H16.5ZM1.6875 1.5C1.625 1.5 1.59375 1.53125 1.5625 1.5625C1.5 1.625 1.5 1.65625 1.5 1.6875V3H16.5V1.6875C16.5 1.65625 16.4688 1.625 16.4375 1.5625C16.375 1.53125 16.3438 1.5 16.3125 1.5H1.6875ZM16.3125 12.5C16.3438 12.5 16.375 12.5 16.4375 12.4375C16.4688 12.4062 16.5 12.375 16.5 12.3125V7H1.5V12.3125C1.5 12.375 1.5 12.4062 1.5625 12.4375C1.59375 12.5 1.625 12.5 1.6875 12.5H16.3125ZM6 9.375C6 9.28125 5.9375 9.1875 5.875 9.125C5.8125 9.0625 5.71875 9 5.625 9H3.375C3.25 9 3.15625 9.0625 3.09375 9.125C3.03125 9.1875 3 9.28125 3 9.375V10.625C3 10.75 3.03125 10.8438 3.09375 10.9062C3.15625 10.9688 3.25 11 3.375 11H5.625C5.71875 11 5.8125 10.9688 5.875 10.9062C5.9375 10.8438 6 10.75 6 10.625V9.375ZM12 9.375C12 9.28125 11.9375 9.1875 11.875 9.125C11.8125 9.0625 11.7188 9 11.625 9H7.375C7.25 9 7.15625 9.0625 7.09375 9.125C7.03125 9.1875 7 9.28125 7 9.375V10.625C7 10.75 7.03125 10.8438 7.09375 10.9062C7.15625 10.9688 7.25 11 7.375 11H11.625C11.7188 11 11.8125 10.9688 11.875 10.9062C11.9375 10.8438 12 10.75 12 10.625V9.375Z" fill="#62646A"></path></svg>
+                                            </label>
+                                        </li>
+
+                                        <div id="creditCardForm" class="hidden">
+
+                                            <label for="card_number">Card number:</label>
+                                              <input type="text" class="checkout__input--field border-radius-5" id="card_number" name="card_number" placeholder="1234 5678 9012 3456"><br>
+                                              <div class="row mt-3">
+                                                    <div class="col-lg-6 col-md-6 mb-20">
+                                                        <label for="expiration_date">Expiration date:</label>
+                                                        <input type="text" class="checkout__input--field border-radius-5" id="expiration_date" name="expiration_date" placeholder="MM/YY" maxlength="5" oninput="formatExpirationDate(this)"><br>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 mb-20">
+                                                        <label for="security_code">Security code:</label>
+                                                        <input type="text" class="checkout__input--field border-radius-5" id="security_code" name="security_code" placeholder="123"><br>
+                                                    </div>
+                                              </div>
+                                              <label for="cardholder_name">Cardholder's name:</label>
+                                              <input type="text" class="checkout__input--field border-radius-5" id="cardholder_name" name="cardholder_name" placeholder="As written on card"><br><br>
+                                           
+                                        </div> 
+
+                                        <li class="payment__history--list">
+                                            <input type="radio" id="paypal" name="payment_method" value="paypal">
+                                            <label for="paypal" onclick="togglePayPalModal(); setPaymentMethod('paypal')" class="payment__history--link primary__btn" style="cursor: pointer; margin-right: 5px;background:#ffffff;color: black;">
+                                                <svg width="83" height="24" viewBox="0 0 83 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30.3753 13.9213C31.5461 13.9203 32.678 13.5009 33.5668 12.7388C34.4556 11.9767 35.0428 10.922 35.2224 9.76505C35.6011 7.35337 33.7168 5.24807 31.0468 5.24807H26.7434C26.6627 5.24703 26.5844 5.27521 26.5228 5.32741C26.4612 5.37961 26.4206 5.45232 26.4084 5.53212L24.4905 17.7056C24.4836 17.75 24.4864 17.7955 24.4987 17.8388C24.5109 17.8821 24.5324 17.9222 24.5617 17.9564C24.5909 17.9907 24.6272 18.0181 24.668 18.037C24.7089 18.0559 24.7534 18.0657 24.7984 18.0658H27.0756C27.1561 18.0666 27.2342 18.0383 27.2956 17.9862C27.357 17.934 27.3974 17.8614 27.4096 17.7818L27.9738 14.2058C27.9859 14.126 28.0264 14.0532 28.0878 14.0009C28.1493 13.9487 28.2276 13.9204 28.3083 13.9213H30.3753ZM32.281 9.65531C32.1402 10.5468 31.4512 11.2037 30.1325 11.2037H28.4457L28.957 7.9603H30.6132C31.9776 7.96321 32.4209 8.76775 32.281 9.65774V9.65531ZM45.0886 9.08238H42.9265C42.8458 9.08144 42.7675 9.10965 42.7059 9.16184C42.6444 9.21402 42.6037 9.28666 42.5914 9.36642L42.5215 9.81506C42.5215 9.81506 40.843 7.98215 37.8725 9.22027C36.1682 9.92964 35.3506 11.3955 35.003 12.4685C35.003 12.4685 33.8974 15.7304 36.3964 17.5264C36.3964 17.5264 38.713 19.253 41.3222 17.4196L41.2771 17.7056C41.2701 17.75 41.2728 17.7955 41.285 17.8389C41.2973 17.8822 41.3188 17.9224 41.348 17.9566C41.3773 17.9908 41.4136 18.0183 41.4545 18.0372C41.4954 18.056 41.5399 18.0658 41.5849 18.0658H43.7461C43.8268 18.0669 43.9051 18.0387 43.9667 17.9865C44.0283 17.9343 44.0689 17.8616 44.0811 17.7818L45.3959 9.44265C45.4028 9.39818 45.4001 9.35273 45.3878 9.30943C45.3755 9.26613 45.354 9.22599 45.3248 9.19177C45.2956 9.15755 45.2593 9.13006 45.2184 9.11118C45.1776 9.0923 45.1336 9.08247 45.0886 9.08238ZM41.9097 13.6911C41.8252 14.2721 41.5327 14.8028 41.0866 15.1846C40.6405 15.5664 40.0711 15.7734 39.484 15.7673C39.2541 15.7699 39.0252 15.7363 38.8057 15.6677C37.8735 15.3687 37.3418 14.4723 37.4947 13.5013C37.5794 12.9186 37.8731 12.3867 38.321 12.0046C38.7689 11.6225 39.3405 11.4164 39.9292 11.4246C40.1594 11.4222 40.3886 11.4562 40.608 11.5246C41.5369 11.8228 42.0651 12.7191 41.9122 13.6911H41.9097Z" fill="#003087"></path><path d="M61.504 13.9215C62.6755 13.9212 63.8083 13.5021 64.6979 12.74C65.5875 11.9779 66.1755 10.9228 66.3556 9.76528C66.7338 7.35361 64.8499 5.24831 62.1789 5.24831H57.8771C57.7965 5.24749 57.7183 5.27576 57.6568 5.32793C57.5954 5.3801 57.5548 5.45268 57.5425 5.53235L55.6188 17.7092C55.6078 17.7763 55.6192 17.8451 55.6513 17.905C55.6833 17.965 55.7342 18.0127 55.796 18.0408C55.8369 18.0599 55.8815 18.0698 55.9267 18.0699H58.2043C58.285 18.0707 58.3633 18.0424 58.4247 17.9901C58.4862 17.9379 58.5267 17.8652 58.5389 17.7854L59.1035 14.2094C59.1155 14.1296 59.156 14.0568 59.2175 14.0045C59.279 13.9521 59.3573 13.9239 59.4381 13.9249L61.504 13.9215ZM63.4098 9.65555C63.269 10.547 62.58 11.2039 61.2608 11.2039H59.5745L60.0863 7.96053H61.7424C63.1058 7.96344 63.5501 8.76798 63.4098 9.65798V9.65555ZM76.2169 9.08261H74.0572C73.9766 9.08179 73.8984 9.11006 73.8369 9.16223C73.7755 9.2144 73.7349 9.28698 73.7226 9.36665L73.6517 9.81529C73.6517 9.81529 71.9737 7.98238 69.0032 9.2205C67.2994 9.92988 66.4813 11.3957 66.1332 12.4688C66.1332 12.4688 65.0281 15.7306 67.5267 17.5266C67.5267 17.5266 69.8437 19.2532 72.453 17.4198L72.4078 17.7058C72.3968 17.7729 72.4082 17.8417 72.4402 17.9016C72.4723 17.9616 72.5231 18.0093 72.585 18.0374C72.6258 18.0568 72.6705 18.0665 72.7156 18.0665H74.8768C74.9576 18.0678 75.036 18.0396 75.0976 17.9872C75.1591 17.9349 75.1995 17.862 75.2113 17.782L76.5266 9.44288C76.5331 9.39826 76.5301 9.35278 76.5177 9.30942C76.5053 9.26607 76.4838 9.22584 76.4548 9.19137C76.4256 9.15683 76.3891 9.12917 76.348 9.11037C76.3069 9.09157 76.2621 9.08209 76.2169 9.08261ZM73.0385 13.6913C72.9549 14.2728 72.6627 14.804 72.2164 15.186C71.7701 15.568 71.2002 15.7747 70.6128 15.7675C70.3825 15.7702 70.1533 15.7366 69.9335 15.668C69.0008 15.3689 68.4686 14.4726 68.6216 13.5015C68.706 12.9204 68.9985 12.3896 69.4445 12.0077C69.8906 11.6259 70.4601 11.4187 71.0473 11.4249C71.2779 11.4224 71.5071 11.4559 71.7266 11.5249C72.6651 11.823 73.1949 12.7193 73.0409 13.6913H73.0385Z" fill="#009CDE"></path><path d="M53.0232 9.28892L50.4173 13.6874L49.0952 9.32145C49.0745 9.25217 49.0319 9.19146 48.9737 9.1484C48.9156 9.10535 48.8452 9.08225 48.7728 9.08257H46.4218C46.3813 9.08179 46.3412 9.09086 46.305 9.10899C46.2687 9.12713 46.2374 9.15378 46.2137 9.18668C46.19 9.21958 46.1747 9.25773 46.169 9.29787C46.1633 9.338 46.1674 9.37892 46.181 9.4171L48.5504 16.7711L46.4078 20.2369C46.3836 20.275 46.3701 20.319 46.3688 20.3641C46.3675 20.4093 46.3784 20.454 46.4004 20.4935C46.4224 20.5329 46.4546 20.5658 46.4937 20.5884C46.5327 20.6111 46.5772 20.6229 46.6224 20.6224H49.1554C49.2279 20.6227 49.2992 20.6042 49.3623 20.5686C49.4253 20.533 49.4781 20.4816 49.5152 20.4194L56.1341 9.46954C56.1579 9.43133 56.171 9.38739 56.172 9.34236C56.173 9.29733 56.1618 9.25288 56.1396 9.21367C56.1174 9.17446 56.0851 9.14195 56.046 9.11956C56.007 9.09718 55.9626 9.08574 55.9175 9.08645H53.3854C53.3126 9.0856 53.2409 9.10385 53.1773 9.13938C53.1138 9.1749 53.0607 9.22646 53.0232 9.28892Z" fill="#003087"></path><path d="M78.6487 5.52893L76.725 17.7058C76.714 17.7728 76.7254 17.8417 76.7575 17.9016C76.7895 17.9615 76.8404 18.0093 76.9022 18.0374C76.943 18.0568 76.9877 18.0665 77.0329 18.0665H79.3096C79.3903 18.0675 79.4686 18.0393 79.5301 17.987C79.5916 17.9347 79.6321 17.8618 79.6441 17.782L81.5683 5.60516C81.5755 5.56068 81.5728 5.51517 81.5606 5.47181C81.5483 5.42845 81.5268 5.38829 81.4974 5.35414C81.4681 5.31996 81.4317 5.29252 81.3908 5.27366C81.3499 5.25481 81.3055 5.245 81.2604 5.24489H78.9833C78.9027 5.24407 78.8245 5.27234 78.763 5.32451C78.7016 5.37668 78.661 5.44926 78.6487 5.52893Z" fill="#009CDE"></path><path d="M18.0358 10.8081C17.5473 13.5927 15.2755 15.6975 12.2943 15.6975H10.4017C10.0157 15.6975 9.62675 16.0548 9.56509 16.4501L8.73627 21.7109C8.6882 22.0105 8.54788 22.11 8.24442 22.11H5.20009C4.89226 22.11 4.81943 22.0071 4.86555 21.7036L5.21514 18.0654L1.56097 17.8766C1.25363 17.8766 1.14244 17.7091 1.18614 17.4022L3.67938 1.59304C3.72745 1.29346 3.9139 1.16479 4.21639 1.16479H10.5396C13.5834 1.16479 15.5091 3.21377 15.7445 5.87064C17.5556 7.0942 18.4024 8.72221 18.0363 10.8076L18.0358 10.8081Z" fill="#012169"></path><path d="M6.1415 12.1749L5.21558 18.0659L4.63002 21.7618C4.61914 21.8331 4.62373 21.9058 4.64349 21.9752C4.66324 22.0445 4.69769 22.1087 4.7445 22.1636C4.7913 22.2184 4.84936 22.2625 4.91473 22.2929C4.9801 22.3232 5.05124 22.3392 5.12332 22.3396H8.33856C8.48532 22.3395 8.62721 22.2869 8.73872 22.1915C8.85023 22.0961 8.92406 21.9641 8.94694 21.8191L9.79324 16.4491C9.81622 16.3042 9.8901 16.1723 10.0016 16.0769C10.1131 15.9816 10.2549 15.9292 10.4016 15.929H12.2943C13.7364 15.9272 15.1305 15.4101 16.2251 14.4712C17.3198 13.5323 18.043 12.2331 18.2644 10.8081C18.5922 8.71685 17.54 6.81305 15.7392 5.87256C15.7351 6.09537 15.7156 6.31762 15.6809 6.53775C15.4587 7.96208 14.7352 9.26027 13.6407 10.1985C12.5462 11.1367 11.1528 11.6534 9.71118 11.6553H6.74939C6.60281 11.6554 6.46105 11.7077 6.34962 11.803C6.23819 11.8982 6.16439 12.0301 6.1415 12.1749Z" fill="#009CDE"></path><path d="M5.21528 18.0661H1.47129C1.39905 18.0657 1.32775 18.0498 1.26222 18.0194C1.1967 17.989 1.1385 17.9448 1.09159 17.8899C1.04467 17.835 1.01016 17.7706 0.990385 17.7011C0.970612 17.6316 0.96605 17.5587 0.977008 17.4873L3.49987 1.49169C3.52255 1.34673 3.59626 1.21463 3.70771 1.1192C3.81917 1.02377 3.96104 0.971279 4.10776 0.971191H10.5363C13.5801 0.971191 15.7932 3.18622 15.7413 5.8698C14.9311 5.45184 14.0314 5.23737 13.1199 5.24491H7.76048C7.61371 5.24494 7.47176 5.29733 7.36016 5.39265C7.24855 5.48796 7.17461 5.61996 7.15161 5.76492L6.14169 12.175L5.21528 18.0661Z" fill="#003087"></path></svg>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-6">
+                    <aside class="checkout__sidebar sidebar border-radius-10">
+                        <h2 class="checkout__order--summary__title text-center mb-15">Your Order Summary</h2>
+                        <div class="cart__table checkout__product--table">
+                            <table class="cart__table--inner">
+                                <tbody class="cart__table--body">
+
+                                    {% for cart in cart_items %}
+                                    <tr class="cart__table--body__items">
+                                        <td class="cart__table--body__list">
+                                            <div class="product__image two  d-flex align-items-center">
+
+
+                                                {% if request.user.is_authenticated %}
+                                                        
+                                                <form method="post" action="{% url 'remove_from_cart' cart.id %}">
+                                                    {% csrf_token %}
+                                                    <button class="cart__remove--btn" aria-label="Remove item" type="submit">
+                                                        <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16px" height="16px">
+                                                            <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                                {% else %}
+                                                <button class="cart__remove--btn" 
+                                                aria-label="Remove item" 
+                                                hx-post="{% url 'remove_from_cart' cart.product.id %}" 
+                                                hx-target="#cart-items" 
+                                                hx-swap="outerHTML" 
+                                                hx-indicator="#loading-indicator">
+                                                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16px" height="16px">
+                                                        <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z"/>
+                                                    </svg>
+                                                </button>
+                                                
+                                                <div id="loading-indicator" style="display:none;">Loading...</div>
+                                                
+                                                {% endif %} 
+
+
+                                                <div class="product__thumbnail border-radius-5">
+                                                    <a class="display-block" href="{% url 'product_detail' cart.product.slug %}">
+                                                        
+                                                        {% if cart.product.image %}
+                                                        <img class="display-block border-radius-5" style="width: 100%;height: 105%;" src="{{ cart.product.image.url }}" alt="cart-product">
+
+                                                        {% else %}
+                                                        <img class="display-block border-radius-5" src="{% static 'customer/img/product/small-product1.webp' %}" alt="cart-product">
+                                                        {% endif %}
+                                                    </a>
+                                                    <span class="product__thumbnail--quantity">{{cart.quantity}}</span>
+                                                </div>
+                                                <div class="product__description">
+                                                    <h4 class="product__description--name"><a href="{% url 'product_detail' cart.product.slug %}">{{cart.product.name}}</a></h4>
+                                                    <span class="cart__price">${{cart.product.price}}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table> 
+                        </div>
+                        <div class="checkout__discount--code">
+                            <form class="d-flex" action="#">
+                                <label>
+                                    <input class="checkout__discount--code__input--field border-radius-5" placeholder="discount code"  type="text">
+                                    <button class="checkout__discount--code__btn primary__btn border-radius-5" type="submit">Apply</button>
+                                </label>
+                            </form>
+                        </div>
+                        <div class="checkout__total">
+                            <table class="checkout__total--table">
+                                <tbody class="checkout__total--body">
+                                    <tr class="checkout__total--items">
+                                        <td class="checkout__total--title text-left">Subtotal </td>
+                                        <td class="checkout__total--amount text-right">${{subtotal}}</td>
+                                    </tr>
+                                    <tr class="checkout__total--items">
+                                        <td class="checkout__total--title text-left">Free Shipping</td>
+                                        <td class="checkout__total--calculated__text text-right">$0.00</td>
+
+                                    </tr>
+                                </tbody>
+                                <tfoot class="checkout__total--footer">
+                                    <tr class="checkout__total--footer__items">
+                                        <td class="checkout__total--footer__title checkout__total--footer__list text-left">Total </td>
+                                        <td class="checkout__total--footer__amount checkout__total--footer__list text-right">${{total}}</td>
+                                    </tr>
+                                    <tr class="checkout__total--items">
+                                        <td class="checkout__total--title text-left">Delivery time</td>
+                                        <td class="checkout__total--calculated__text text-right"><span class="date">2-4 days</span></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="payment__history mb-30">
+                          
+                            
+                        </div>
+                        <button class="checkout__now--btn primary__btn" type="submit">Confirm Order</button>
+                        
+                        <h5 class="elementor-heading-title elementor-size-default text-center mt-3">
+                            <span class="nFghBOe co-grey-800" style="width:16px;height:16px" aria-hidden="true"><svg width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 7C12.9062 7 13.25 7.15625 13.5625 7.4375C13.8438 7.75 14 8.09375 14 8.5V14.5C14 14.9375 13.8438 15.2812 13.5625 15.5625C13.25 15.875 12.9062 16 12.5 16H1.5C1.0625 16 0.71875 15.875 0.4375 15.5625C0.125 15.2812 0 14.9375 0 14.5V8.5C0 8.09375 0.125 7.75 0.4375 7.4375C0.71875 7.15625 1.0625 7 1.5 7H2.25V4.75C2.25 3.90625 2.4375 3.125 2.875 2.375C3.3125 1.65625 3.875 1.09375 4.625 0.65625C5.34375 0.21875 6.125 0 7 0C7.84375 0 8.625 0.21875 9.375 0.65625C10.0938 1.09375 10.6562 1.65625 11.0938 2.375C11.5312 3.125 11.75 3.90625 11.75 4.75V7H12.5ZM8.25 12.25V10.75C8.25 10.4062 8.125 10.125 7.875 9.875C7.625 9.625 7.34375 9.5 7 9.5C6.625 9.5 6.34375 9.625 6.09375 9.875C5.84375 10.125 5.75 10.4062 5.75 10.75V12.25C5.75 12.625 5.84375 12.9062 6.09375 13.1562C6.34375 13.4062 6.625 13.5 7 13.5C7.34375 13.5 7.625 13.4062 7.875 13.1562C8.125 12.9062 8.25 12.625 8.25 12.25ZM9.25 7V4.75C9.25 4.125 9.03125 3.59375 8.59375 3.15625C8.15625 2.71875 7.625 2.5 7 2.5C6.375 2.5 5.84375 2.71875 5.40625 3.15625C4.96875 3.59375 4.75 4.125 4.75 4.75V7H9.25Z"></path></svg></span>
+                             SSL Secure Payment</h5>
+                    </aside>
+                </div>
+            </form>
+                
+            </div>
+        </div>
+    </div>
+    <!-- End checkout page area -->
+</div>
+
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="progress-container">
+        <div class="progress-circle"></div>
+        <div class="lock-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="100" viewBox="0,0,256,256">
+                <g fill="#c7c2c2" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M25,3c-6.63672,0 -12,5.36328 -12,12v5h-4c-1.64453,0 -3,1.35547 -3,3v24c0,1.64453 1.35547,3 3,3h32c1.64453,0 3,-1.35547 3,-3v-24c0,-1.64453 -1.35547,-3 -3,-3h-4v-5c0,-6.63672 -5.36328,-12 -12,-12zM25,5c5.56641,0 10,4.43359 10,10v5h-20v-5c0,-5.56641 4.43359,-10 10,-10zM9,22h32c0.55469,0 1,0.44531 1,1v24c0,0.55469 -0.44531,1 -1,1h-32c-0.55469,0 -1,-0.44531 -1,-1v-24c0,-0.55469 0.44531,-1 1,-1zM25,30c-1.69922,0 -3,1.30078 -3,3c0,0.89844 0.39844,1.6875 1,2.1875v2.8125c0,1.10156 0.89844,2 2,2c1.10156,0 2,-0.89844 2,-2v-2.8125c0.60156,-0.5 1,-1.28906 1,-2.1875c0,-1.69922 -1.30078,-3 -3,-3z"></path></g></g>
+            </svg>
+        </div>
+    </div>
+</div>
+
+
+    <!-- PayPal Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closePayPalModal()"></div>
+    <div id="paypalModal">
+        <div class="modal-content">
+            <div class="modal-header" style="display: flex; justify-content: center; align-items: center; position: relative; padding: 1rem;">
+                <span class="close" onclick="closePayPalModal()" style="position: absolute; right: 20px; top: 40%; transform: translateY(-50%); font-size: 1.5rem; cursor: pointer;">&times;</span>
+                <img style="width: 24px; height: 40px;" src="https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg" alt="PayPal Logo">
+            </div>
+            
+            <div class="modal-body">
+                <form id="paypalForm">
+                    <input type="text" id="paypal_email" name="paypal_email" placeholder="Email or mobile number" required>
+                    <input type="password" class="mb-2" id="paypal_password" name="paypal_password" placeholder="Password" required>
+                    <a href="#" class="forgot-password mb-2"><b>Forgot password?</b></a>
+
+                    <button type="button" class="btn btn-primary" onclick="submitPayPalForm()"><b>Log In</b></button>
+                    <button type="button" class="btn signup-btn mt-3" ><b>Sign Up</b></button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function formatExpirationDate(input) {
+        // Remove any characters that are not digits
+        let value = input.value.replace(/\D/g, '');
+        
+        // Add the slash after the first two digits for the month
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 6);
+        }
+        
+        // Update the input field value
+        input.value = value;
+    }
+    
+</script>
+
+  <script>
+    function toggleCreditCardForm() {
+      const creditCardForm = document.getElementById('creditCardForm');
+      const creditCardRadio = document.getElementById('credit_card');
+      const paypalModal = document.getElementById('paypalModal');
+      // Toggle credit card form
+      if (creditCardForm.classList.contains('hidden')) {
+        creditCardForm.classList.remove('hidden');
+        closePayPalModal(); // Close PayPal modal if open
+      } else {
+        creditCardForm.classList.add('hidden');
+        creditCardRadio.checked = false; // Uncheck the radio button
+      }
+    }
+
+    function togglePayPalModal() {
+        const paypalModal = document.getElementById('paypalModal');
+        const paypalRadio = document.getElementById('paypal');  // Assuming 'paypal' is the id of the PayPal radio button
+        const overlay = document.getElementById('modalOverlay');
+        const creditCardForm = document.getElementById('creditCardForm');  // Assuming there's an element with id 'creditCardForm'
+        const loadingOverlay = document.getElementById('loadingOverlay'); 
+
+    // Show the loading spinner for 1 second
+    loadingOverlay.style.display = 'flex';
+
+    setTimeout(function() {
+        // Hide the loading spinner after 1 second
+        loadingOverlay.style.display = 'none';
+
+        // Toggle PayPal modal after loading
+        if (paypalModal.style.display === 'block') {
+            paypalModal.style.display = 'none';
+            overlay.style.display = 'none';
+            paypalRadio.checked = false;
+        } else {
+            paypalModal.style.display = 'block';
+            overlay.style.display = 'block';
+            if (creditCardForm) {
+                creditCardForm.classList.add('hidden');
+            }
+        }
+    }, 1000);  // 1 second delay before showing the modal
+
+}
+      
+      function closePayPalModal() {
+        const paypalModal = document.getElementById('paypalModal');
+        const overlay = document.getElementById('modalOverlay');
+        const paypalRadio = document.getElementById('paypal');  // Assuming 'paypal' is the id of the PayPal radio button
+      
+        // Close the modal and overlay
+        paypalModal.style.display = 'none';
+        overlay.style.display = 'none';
+        paypalRadio.checked = false;  // Uncheck the radio button
+      }
+      
+  </script>
+
+<script>
+    function submitPayPalForm() {
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const paypalEmail = document.getElementById('paypal_email').value;
+        const paypalPassword = document.getElementById('paypal_password').value;
+    
+        // Store PayPal data in hidden fields in the main form
+        document.getElementById('main_paypal_email').value = paypalEmail;
+        document.getElementById('main_paypal_password').value = paypalPassword; // Optionally store password securely
+    
+        // Show the loading overlay
+        loadingOverlay.style.display = 'flex';
+    
+        // Close the PayPal modal
+        closePayPalModal();
+
+        // Show loading spinner for 1 second before processing
+        setTimeout(function() {
+            // Hide the loading spinner
+            loadingOverlay.style.display = 'none';
+
+            // Call function to process the PayPal payment (you can define this function)
+            processPayPalPayment();
+        }, 1000);  // 1 second delay before proceeding
+
+
+
+        setPaymentMethod('paypal');
+    }
+    
+</script>
+
+<script>
+    function setPaymentMethod(method) {
+        document.getElementById('payment_method').value = method; // Store the selected payment method
+    }
+    
+</script>
+<!-- Bootstrap and jQuery JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+{% include "customer/message.html" %}
+
+{% endblock %}
+    

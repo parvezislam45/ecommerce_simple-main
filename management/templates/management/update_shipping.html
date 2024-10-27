@@ -1,0 +1,28 @@
+{% extends 'management/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <!-- BREADCRUMB -->
+    <div class="page-meta">
+        <nav class="breadcrumb-style-five" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Product</li>
+            </ol>
+        </nav>
+    </div><br><br>
+    <!-- /BREADCRUMB -->
+
+
+<h2>Update Shipping for {{ cart_item.product.name }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="shipping_fee">Shipping Fee:</label>
+        <input type="number" step="0.01" class="form-control" id="shipping_fee" name="shipping_fee" value="{{ shipping_item.shipping_fee }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Shipping</button>
+</form>
+{% endblock %}

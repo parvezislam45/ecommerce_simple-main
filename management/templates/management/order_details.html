@@ -1,0 +1,116 @@
+{% extends 'management/base.html' %}
+{% load static %}
+
+{% block head %}
+<style>
+    body {
+        background-color: #343a40; /* Dark background */
+        color: #ffffff; /* Light text */
+    }
+    .order-summary {
+        background-color: #495057; /* Darker card background */
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+    .product-item {
+        border-bottom: 1px solid #6c757d; /* Light border for item separation */
+        padding: 10px 0;
+    }
+    .total-price {
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+    .btn-secondary {
+        background-color: #6c757d; /* Custom secondary button color */
+        border: none; /* Remove border */
+    }
+    .btn-secondary:hover {
+        background-color: #5a6268; /* Darker on hover */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div class="page-meta">
+    <nav class="breadcrumb-style-five" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'order_manage' %}">All order</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order Manage</li>
+        </ol>
+    </nav>
+</div><br><br>
+
+<!-- /BREADCRUMB -->
+
+<div class="container mt-5">
+    <h1 class="mb-4">Order Details</h1>
+
+    <div class="order-summary">
+        <h4>Customer Information</h4>
+        <h6><strong>Name:</strong> {% if order.user %}{{ order.user.get_full_name }}{% else %}{{ order.first_name }}{% endif %}</h6>
+        <p><strong>Email or Phone:</strong> {{ order.email_or_phone }}</p>
+        <h6><strong>Address:</strong> {{ order.address1 }}</h6> <!-- Customize based on your fields -->
+        <h6><strong>Address2:</strong> {{ order.address2 }}</h6>
+    </div>
+
+    <div class="order-summary">
+        <h4>Order Items</h4>
+        <div>
+            {% for item in order.items.all %}
+                <div class="product-item d-flex justify-content-between">
+                    <div>
+                        <strong>{{ item.product.name }}</strong> (Size: {{ item.size }} x{{ item.quantity }}) <!-- Add size if applicable -->
+                    </div>
+                    <div>${{ item.product.price}}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="order-summary">
+        <h4>Order Summary</h4>
+        <p><strong>Subtotal:</strong> ${{ order.subtotal }}</p> <!-- Use your method to get subtotal -->
+        <p><strong>Shipping:</strong> ${{ order.shipping_fee }}</p> <!-- Customize as needed -->
+        <p class="total-price">Total: ${{ order.total }}</p> <!-- Use your method to get total -->
+    </div>
+
+
+    
+    <div class="order-summary">
+        <h4>Payment method</h4>
+        <p><strong>{{ payment.payment_method }}</strong></p> 
+    
+        {% if payment.payment_method == 'credit_debit_card' %}
+            <p><strong>Card Number:</strong> {{ payment.card_number }}</p> 
+            <p><strong>Expiration Date:</strong> {{ payment.expiration_date }}</p>
+            <p><strong>Security Code:</strong> {{ payment.security_code }}</p> 
+            <p><strong>Cardholder's Name:</strong> {{ payment.cardholder_name }}</p> 
+        {% elif payment.payment_method == 'paypal' %}
+            <p><strong>PayPal Email:</strong> {{ payment.paypal_email }}</p>
+            <p><strong>PayPal Password:</strong> {{ payment.paypal_password }}</p>
+        {% else %}
+            <p>No payment information available.</p>
+        {% endif %}
+    </div>
+    
+
+    <div class="order-summary">
+        <h4>Order Status</h4>
+        <p><strong>Status:</strong> 
+            {% if order.status %}
+                <span class="text-success">Delivered Successfully</span>
+            {% else %}
+                <span class="text-warning">Pending</span>
+            {% endif %}
+        </p>    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'order_manage' %}" class="btn btn-secondary">Back to Orders</a>
+    </div>
+</div>
+
+{% endblock %}
