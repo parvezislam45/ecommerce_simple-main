@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="relative w-full h-[42rem] overflow-hidden">
+<div class="relative w-full h-[42rem] overflow-hidden mt-16">
     <div id="carousel" class="absolute w-full flex">
         <!-- Slide 1 -->
-        <div class="w-full h-[42rem] flex items-center justify-start absolute slide fade-in-out" style="background-image: url('https://cdn.mos.cms.futurecdn.net/4hU7T5fQYWbnU5vxHZnAZE-1200-80.jpg'); background-size: cover; background-position: center;">
+        <div class="w-full h-[42rem] flex items-center justify-start absolute slide fade-in-out" style="background-image: url('https://buyventure.xyz/static/customer/img/slider/home1-slider3.png'); background-size: cover; background-position: center;">
             <div class="text-start slide1-div px-20">
                 <h1 class="text-3xl font-extrabold text-white lg:text-7xl slide-3-h1">Innovative Electronics<br/> Modern Living</h1>
                 <p class="text-2xl text-white font-normal mt-10">Upgrade Your Lifestyle With Cutting-Edge Technology Sleek Design<br/>Shop Today and Enjoy Incredible Discounts</p>
@@ -14,7 +14,7 @@
             </div>
         </div>
         <!-- Slide 2 -->
-        <div class="w-full h-[40rem] flex items-center justify-center absolute slide fade-in-out" style="background-image: url('https://plus.unsplash.com/premium_photo-1711136677946-27ffc2a8cf7b?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center;">
+        <div class="w-full h-[40rem] flex items-center justify-start absolute slide fade-in-out" style="background-image: url('https://buyventure.xyz/static/customer/img/slider/home1-slider.png'); background-size: cover; background-position: center;">
             <div class="text-start slide1-div px-20">
                 <h1 class="text-3xl font-extrabold text-white lg:text-7xl slide-3-h1">Innovative Electronics<br/> Modern Living</h1>
                 <p class="text-2xl text-white font-normal mt-10">Upgrade Your Lifestyle With Cutting-Edge Technology Sleek Design<br/>Shop Today and Enjoy Incredible Discounts</p>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <!-- Slide 3 -->
-        <div class="w-full h-[40rem] flex items-center justify-end absolute slide fade-in-out" style="background-image: url('https://cctvsmartsystems.co.uk/wp-content/uploads/2017/06/CCTV-Installers-of-Hikvision-min.jpg'); background-size: cover; background-position: center;">
+        <div class="w-full h-[40rem] flex items-center justify-end absolute slide fade-in-out" style="background-image: url('https://buyventure.xyz/static/customer/img/slider/home1-slider2.png'); background-size: cover; background-position: center;">
             <div class="text-start slide1-div px-20">
                 <h1 class="text-3xl font-extrabold text-white lg:text-7xl slide-3-h1">Innovative Electronics<br/> Modern Living</h1>
                 <p class="text-2xl text-white font-normal mt-10">Upgrade Your Lifestyle With Cutting-Edge Technology Sleek Design<br/>Shop Today and Enjoy Incredible Discounts</p>
@@ -55,27 +55,31 @@
 
 <div>
     <h1 class='text-center font-bold text-5xl mt-32'>Most Popular Item</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-6 sm:px-12 lg:px-40 mt-40">
-        {% for product in links %}
-        <a href="{% url 'item-detail' product.id %}" class="block">
-            <div class="bg-white overflow-hidden border border-gray-300">
-                <img class="w-96 h-80 object-cover" src="{{ product.mainimage.url }}" alt="Product image" />
-                <div class="py-6 px-6 bg-white">
-                    <h1 class="text-gray-700 font-bold text-2xl md:text-2xl mb-3 hover:text-gray-900 hover:cursor-pointer">
-                        {{ product.title }}
-                    </h1>
-                    <h1 class="text-gray-700 font-bold text-2xl md:text-2xl mb-3 hover:text-gray-900 hover:cursor-pointer text-center">
-                        {{ product.price }}
-                    </h1>
+    <div class="relative flex flex-col justify-center overflow-hidden py-6 sm:py-12">
+        <div class="mx-auto max-w-screen-xl px-4 w-full">
+          <div class="grid w-full grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+            {% for product in links %}
+            <a href="{% url 'item-detail' product.id %}">
+                <div class="relative flex flex-col shadow-md rounded-xl">
+                    <div class=" overflow-hidden relative">
+                      <img class="w-full h-56" src="{{ product.mainimage.url }}" alt="">
+                  </div>
+                  <div class="bg-white py-4 px-3 text-xl sm:text-sm ">
+                    <h3 class="font-bold text-sm md:text-xl mb-2">{{product.title}}</h3>
+                    <h3 class="font-bold text-sm md:text-xl mb-2 text-center">{{product.price}}</h3>
                     <div class="text-center group mt-10">
-                        <span class="bg-black text-xl px-8 py-3 font-medium text-white rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">Buy Now</span>
-                    </div>
+                      <span class="bg-black text-md px-6 py-2 font-medium text-white md:opacity-0 md:transition-opacity md:duration-300 md:group-hover:opacity-100">Buy Now</span>
+                  </div> 
+                  <div class='mt-3'></div>
+                  </div>
                 </div>
-            </div>
-        </a> 
-        {% endfor %}
-    </div>
-    <div class='text-center mt-16'>
+            </a>
+            
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    <div class='text-center '>
         <a class=' bg-black text-2xl px-10 py-4 font-medium text-white rounded-2xl' href="{% url 'store' %}">More Product</a>
         
     </div>
@@ -86,12 +90,11 @@
     
 </div>
 
-<!-- Scroll to Top Button -->
-<button id="scrollToTop" title="Scroll to top">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-    </svg>
-</button>
+<div id="scrollButton" class="flex items-end justify-end fixed bottom-0 right-0 mb-10 mr-4 z-10 opacity-0 transition-opacity duration-300">
+    <div>
+        <svg xmlns="http://www.w3.org/2000/svg"  class='w-11 h-11 rounded-full' fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16"> <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/> </svg>
+    </div>
+</div>
 
 <script>
     const slides = document.querySelectorAll('.slide');
@@ -135,7 +138,22 @@
     // Initial slide
     showSlide(currentIndex);
 </script>
+<style>
+    /* Ensures smooth transition */
+    #scrollButton {
+        transition: transform 0.5s ease, opacity 0.5s ease;
+    }
 
+    /* Initial hidden position and opacity */
+    .translate-y-10 {
+        transform: translateY(2.5rem);
+    }
+
+    /* Fully visible position and opacity */
+    .translate-y-0 {
+        transform: translateY(0);
+    }
+</style>
 <style>
     .slide {
         transition: opacity 1s linear;
@@ -198,6 +216,24 @@
         background-color: rgba(0, 0, 0, 1);
     }
 </style>
+<script>
+    const scrollButton = document.getElementById('scrollButton');
+    const triggerDistance = 100;  // Adjust this to change the distance from the bottom
+
+    window.addEventListener('scroll', () => {
+        const scrollPosition = window.scrollY + window.innerHeight;
+        const footerPosition = document.body.offsetHeight - triggerDistance;
+
+        // Show button with slide-up effect near footer, hide with slide-down otherwise
+        if (scrollPosition >= footerPosition) {
+            scrollButton.classList.remove('translate-y-10', 'opacity-0');
+            scrollButton.classList.add('translate-y-0', 'opacity-100');
+        } else {
+            scrollButton.classList.remove('translate-y-0', 'opacity-100');
+            scrollButton.classList.add('translate-y-10', 'opacity-0');
+        }
+    });
+</script>
   </div>
   
 

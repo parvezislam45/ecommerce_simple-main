@@ -1,11 +1,13 @@
 {% extends "base.html" %} {% block content %}
+
+
 <section class="text-gray-700 body-font overflow-hidden bg-white">
-  <div class="container px-5 py-12 md:py-16 lg:py-24 mx-auto">
-    <div class="flex flex-wrap items-center mx-auto">
+  <div class="container px-48 py-12 md:py-16 lg:py-24 mx-auto">
+    <div class="flex flex-wrap items-start mx-auto">
       
       <!-- Main Image Container -->
-      <div class="lg:w-1/2 w-full relative overflow-hidden mb-6 lg:mb-0">
-        <div id="mainImageContainer" class="w-full relative flex transition-transform duration-500 ease-linear">
+      <div class="lg:w-2/4 w-full relative overflow-hidden mb-6 lg:mb-0">
+        <div id="mainImageContainer" class="w-96 relative flex transition-transform duration-500 ease-linear">
           <img
             id="mainImage"
             alt="ecommerce"
@@ -27,33 +29,33 @@
         <!-- Thumbnails and Navigation Buttons -->
         <div class="flex flex-wrap justify-between px-4 md:px-8 lg:px-14 mt-6 gap-3 relative">
           <img
-            class="thumbnail w-20 md:w-28 lg:w-44 object-cover object-center rounded border border-gray-200 cursor-pointer"
+            class="thumbnail w-20 md:w-28 lg:w-32 object-cover object-center rounded border border-gray-200 cursor-pointer"
             src="{{item.mainimage.url}}" 
             alt="Thumbnail 1"
           />
           <img
-            class="thumbnail w-20 md:w-28 lg:w-44 object-cover object-center rounded border border-gray-200 cursor-pointer"
+            class="thumbnail w-20 md:w-28 lg:w-32 object-cover object-center rounded border border-gray-200 cursor-pointer"
             src="{{item.mainimage.url}}" 
             alt="Thumbnail 2"
           />
           <img
-            class="thumbnail w-20 md:w-28 lg:w-44 object-cover object-center rounded border border-gray-200 cursor-pointer"
+            class="thumbnail w-20 md:w-28 lg:w-32 object-cover object-center rounded border border-gray-200 cursor-pointer"
             src="{{item.mainimage.url}}" 
             alt="Thumbnail 3"
           />
           
           <!-- Previous and Next Buttons -->
-          <button id="prev" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none">
-            <span class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70">
-              <svg class="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+          <button id="prev" class="absolute top-0 start-0 z-30 flex items-center justify-between h-full cursor-pointer group focus:outline-none">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70">
+              <svg class="w-4 h-4 lg:h-6 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
               </svg>
               <span class="sr-only">Previous</span>
             </span>
           </button>
-          <button id="next" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none">
-            <span class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70">
-              <svg class="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+          <button id="next" class="absolute top-0 end-0 z-30 flex items-center justify-between h-full cursor-pointer group focus:outline-none">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70">
+              <svg class="w-4 h-4 lg:h-6 text-white dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
               </svg>
               <span class="sr-only">Next</span>
@@ -63,12 +65,12 @@
       </div>
 
       <!-- Product Info Section -->
-      <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-        <h1 class="text-black text-xl md:text-4xl font-bold mb-2">
+      <div class="lg:w-2/4 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+        <h1 class="text-black text-xl md:text-3xl font-bold mb-2 leading-8">
           {{item.title}}
         </h1>
-        <h5 class="mt-3 md:mt-4 text-xl md:text-2xl font-bold">{{item.price}}</h5>
-        <p class="leading-relaxed text-lg md:text-xl lg:text-2xl mt-6 md:mt-8">
+        <h5 class="mt-3 md:mt-4 text-xl font-bold">$ {{item.price}}</h5>
+        <p class="leading-relaxed text-lg mt-6 md:mt-8">
           {{ item.description|truncatewords:10 }}
         </p>
         
@@ -76,11 +78,11 @@
         <form method="POST" action="{% url 'add_to_cart' item.id %}" class="mt-8">
           {% csrf_token %}
           <div class="flex items-center text-gray-600">
-            <button type="button" id="decrease" class="px-2 md:px-4 bg-gray-200 hover:bg-black text-black hover:text-white transition rounded-l-md">-</button>
+            <button type="button" id="decrease" class="px-2 bg-gray-200 text-2xl text-black">-</button>
             <input type="number" id="quantity" name="quantity" value="1" min="1" class="w-12 md:w-16 h-10 md:h-12 text-center bg-gray-100" readonly>
-            <button type="button" id="increase" class="px-2 md:px-4 bg-gray-200 hover:bg-black text-black hover:text-white transition rounded-r-md">+</button>
+            <button type="button" id="increase" class="px-2 bg-gray-200 text-2l text-black">+</button>
           </div>
-          <button class="mt-4 text-white w-full bg-black text-lg md:text-xl font-bold py-4 md:py-5 rounded hover:bg-red-600">Buy Now</button>
+          <button class="mt-4 text-white w-full bg-black text-lg md:text-xl font-bold py-3">Buy Now</button>
         </form>
 
         <!-- Secure Checkout -->
@@ -90,10 +92,10 @@
     </div>
 
     <!-- Description Section -->
-    <div class="mt-12 md:mt-20 text-center">
+    <div class="mt-12 md:mt-20 text-start">
       <a class="text-xl md:text-2xl font-semibold border-b-2 border-black pb-2" href="#">Description</a>
     </div>
-    <p class="leading-relaxed text-lg md:text-xl lg:text-2xl mt-8 px-4 md:px-10 lg:px-20 text-gray-700">
+    <p class="text-lg mt-8 px-4 md:px-10 lg:px-20 text-gray-700">
       {{ item.description }}
     </p>
 
@@ -106,38 +108,17 @@
     
   </div>
 </section>
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const quantityInput = document.getElementById('quantity');
-    const increaseButton = document.getElementById('increase');
-    const decreaseButton = document.getElementById('decrease');
-
-    increaseButton.addEventListener('click', function() {
-      let currentQuantity = parseInt(quantityInput.value);
-      quantityInput.value = currentQuantity + 1; // Increment the quantity
-    });
-
-    decreaseButton.addEventListener('click', function() {
-      let currentQuantity = parseInt(quantityInput.value);
-      if (currentQuantity > 1) {
-        quantityInput.value = currentQuantity - 1; // Decrement the quantity if greater than 1
-      }
-    });
-  });
-</script>
-
-
 <style>
   #mainImageContainer {
-      width: 300%; /* Set to 300% for three images side by side */
-      display: flex; /* Use flexbox for horizontal layout */
-      transition: transform 0.5s ease; /* Smooth slide transition */
+      width: 300%; 
+      
+      display: flex; 
+      transition: transform 0.5s ease; 
   }
   .main-image {
-      width: 33.3333%; /* Each image takes one-third of the container width */
-      flex-shrink: 0; /* Prevent images from shrinking */
+      width: 33%;
+      flex-shrink: 0; 
+      margin-right:40px
   }
 </style>
 
@@ -169,5 +150,40 @@
 
   // Initialize the main image to the first thumbnail on load
   updateMainImage(currentIndex);
+</script>
+{% endblock %}
+{% block scripts %}
+<script>
+  
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM fully loaded and parsed');
+
+        const quantityInput = document.getElementById('quantity');
+        const increaseButton = document.getElementById('increase');
+        const decreaseButton = document.getElementById('decrease');
+
+     
+        increaseButton.addEventListener('click', function() {
+            let currentValue = parseInt(quantityInput.value);
+            console.log('Increase button clicked. Current value before increase:', currentValue);
+            // Increase by 1
+            quantityInput.value = currentValue + 1;
+            console.log('Current value after increase:', quantityInput.value);
+        });
+
+     
+        decreaseButton.addEventListener('click', function() {
+            let currentValue = parseInt(quantityInput.value);
+            console.log('Decrease button clicked. Current value before decrease:', currentValue);
+    
+            if (currentValue > 1) {
+    
+                quantityInput.value = currentValue - 1;
+                console.log('Current value after decrease:', quantityInput.value);
+            } else {
+                console.log('Quantity cannot go below 1');
+            }
+        });
+    });
 </script>
 {% endblock %}

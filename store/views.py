@@ -1,18 +1,23 @@
 from rest_framework import generics
 from .models import Items,CartItem
-from .serializers import ItemsSerializer
-from django.views.generic import ListView,DetailView
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView,DetailView,UpdateView,DeleteView
 from django.views import View
 from django.shortcuts import render, redirect,get_object_or_404
 from .forms import ItemsForm
 from django.http import JsonResponse
+from django.urls import reverse_lazy
 import json
 
 class ItemsListView(ListView):
     model = Items
     template_name = 'store.html'
     context_object_name = 'items'
-    
+
+def items_list(request):
+    items = Items.objects.all()  # Retrieve all items from the database
+    return render(request, 'all.html', {'items': items})    
 
 def create_item_view(request):
     if request.method == 'POST':
@@ -30,6 +35,26 @@ class ItemDetailView(DetailView):
     model = Items
     template_name = 'details.html' 
     context_object_name = 'item'
+    
+    
+    
+class ItemUpdateView(UpdateView):
+    model = Items
+    fields = ['title', 'slug', 'description', 'price', 'mainimage', 'subimage1','subimage2','subimage3','subimage4','subimage5', 'subimage6', 'subimage7','subimage8', 'desimage1', 'desimage2', 'desimage3','desimage4', 'desimage5', 'desimage6','desimage7', 'desimage8']
+    template_name = 'edit.html'
+    success_url = reverse_lazy('items-list')
+    
+@method_decorator(csrf_exempt, name='dispatch')
+class ItemDeleteView(DeleteView):
+    model = Items
+
+    def post(self, request, *args, **kwargs):
+        try:
+            item = self.get_object()
+            item.delete()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
     
     
 class AddToCartView(View):

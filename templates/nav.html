@@ -7,9 +7,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-  <nav class="bg-white p-4">
+  <nav class="bg-white p-4 fixed top-0 w-full z-50 shadow">
     <div class="px-4 sm:px-6 lg:px-28 mx-auto flex items-center justify-between">
-      
       <!-- Mobile Menu Icon (left-aligned on small screens) -->
       <div class="block md:hidden flex-shrink-0">
         <button id="menu-btn" class="text-black focus:outline-none">
@@ -18,35 +17,37 @@
           </svg>
         </button>
       </div>
-      
-      <!-- Logo (centered on small screens, left-aligned on md and larger) -->
-      <div class="text-gray-600 text-2xl sm:text-3xl font-bold">
-        <a href="#">BUYVENTURE</a>
+  
+      <!-- Logo and Links container -->
+      <div class="flex items-center justify-between w-full">
+        <!-- Logo -->
+        <div class="text-gray-600 border border-gray-200 shadow-lg text-2xl h-10 font-bold">
+          <a class="px-5" href="#">BUYVENTURE</a>
+        </div>
+  
+        <!-- Links (centered on md and larger screens) -->
+        <div class="hidden md:flex md:flex-grow justify-center space-x-12 text-black">
+          <a href="{% url 'home' %}" class="py-2 text-lg">Home</a>
+          <a href="{% url 'store' %}" class="py-2 text-lg">Shop</a>
+          <a href="#" class="py-2 text-lg">About Us</a>
+          <a href="#" class="py-2 text-lg">Blog</a>
+          <a href="#" class="py-2 text-lg">Contact</a>
+        </div>
+  
+        <!-- Cart Icon (right-aligned on all screen sizes) -->
+        <div class="text-black relative mt-2">
+          <button id="cart-btn" class="relative inline-flex items-center">
+            <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M80,176a16,16,0,0,0-16,16V408c0,30.24,25.76,56,56,56H392c30.24,0,56-24.51,56-54.75V192a16,16,0,0,0-16-16Z"/>
+              <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M160,176V144a96,96,0,0,1,96-96h0a96,96,0,0,1,96,96v32"/>
+            </svg>
+            <div class="absolute -top-2 -right-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-black border-2 border-white rounded-full">{{ cart_length }}</div>
+          </button>
+        </div>
       </div>
-      
-      <!-- Links (only visible on md and larger screens) -->
-      <div class="hidden md:flex md:flex-grow justify-center space-x-12 text-black">
-        <a href="{% url 'home' %}" class="py-2 text-lg sm:text-2xl">Home</a>
-        <a href="{% url 'store' %}" class="py-2 text-lg sm:text-2xl">Shop</a>
-        <a href="#" class="py-2 text-lg sm:text-2xl">About Us</a>
-        <a href="#" class="py-2 text-lg sm:text-2xl">Blog</a>
-        <a href="#" class="py-2 text-lg sm:text-2xl">Contact</a>
-      </div>
-      
-      <!-- Cart Icon (right-aligned on all screen sizes) -->
-      <div class="text-black relative mt-2 md:order-2">
-        <button id="cart-btn" class="relative inline-flex items-center">
-          <svg class='w-8 h-8' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M80,176a16,16,0,0,0-16,16V408c0,30.24,25.76,56,56,56H392c30.24,0,56-24.51,56-54.75V192a16,16,0,0,0-16-16Z"/>
-            <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M160,176V144a96,96,0,0,1,96-96h0a96,96,0,0,1,96,96v32"/>
-          </svg>
-          <div class="absolute -top-2 -right-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-black border-2 border-white rounded-full">{{ cart_length }}</div>
-        </button>
-      </div>
-      
     </div>
-
-    <!-- Overlay and Mobile Menu -->
+  
+    <!-- Mobile Menu -->
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-30 hidden"></div>
     <div id="mobile-menu" class="hidden flex-col bg-white mt-4 md:hidden space-y-4">
       <div class="flex justify-between items-center w-full px-4">
@@ -57,8 +58,7 @@
           </svg>
         </button>
       </div>
-      
-      <div class="flex flex-col items-start space-y-2">
+      <div class="flex flex-col items-start space-y-2 px-4">
         <a href="{% url 'home' %}" class="text-black py-2">Home</a>
         <a href="{% url 'store' %}" class="text-black py-2">Shop</a>
         <a href="#" class="text-black py-2">About Us</a>
@@ -66,58 +66,50 @@
         <a href="#" class="text-black py-2">Contact</a>
       </div>
     </div>
-</nav>
-<div class="fixed inset-x-0 bottom-0 bg-white shadow-md md:hidden flex justify-between items-center text-black p-4">
-  <!-- Home Icon -->
-  <a href="{% url 'home' %}" class="flex flex-col items-center text-sm">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9.5L12 4l9 5.5v8.5c0 .83-.67 1.5-1.5 1.5H4.5A1.5 1.5 0 013 18V9.5z"></path>
-      </svg>
-      <span>Home</span>
-  </a>
-  
-  <!-- Shop Icon -->
-  <a href="{% url 'store' %}" class="flex flex-col items-center text-sm">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11.5V6a4 4 0 00-8 0v5.5M5.5 12.5h13M9 18.5a2 2 0 11-4 0 2 2 0 014 0zm10 0a2 2 0 11-4 0 2 2 0 014 0z"></path>
-      </svg>
-      <span>Shop</span>
-  </a>
-  
-  <!-- Search Icon -->
-  <a href="#" class="flex flex-col items-center text-sm">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 16.5l6 6m-6-6A6.5 6.5 0 1016.5 10a6.5 6.5 0 00-6.5 6.5z"></path>
-      </svg>
-      <span>Search</span>
-  </a>
-  
-  <!-- Cart Icon -->
-  <a href="#" class="flex flex-col items-center text-sm relative">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.5 12.5l1.25 7.5h11.5l1.25-7.5M3 5.5h18M8 10.5v-3a4 4 0 118 0v3"></path>
-      </svg>
-      <span>Cart</span>
-      <span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold px-1 rounded-full">{{ cart_length }}</span>
-  </a>
-  
-  <!-- Wishlist Icon -->
-  <a href="#" class="flex flex-col items-center text-sm">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path>
-      </svg>
-      <span>Wishlist</span>
-  </a>
-</div>
-  <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 md:w-[30rem] z-50">
+  </nav>
+  <div class="fixed inset-x-0 bottom-0 bg-white shadow-md md:hidden flex justify-between items-center text-black p-4">
+    <!-- Home Icon -->
+    <a href="{% url 'home' %}" class="flex flex-col items-center text-sm">
+        <img class='w-10 h-10' src="https://cdn4.iconfinder.com/data/icons/rounded-black-basic-ui/139/Home01-RoundedBlack-512.png" alt="">
+        <span>Home</span>
+    </a>
+    
+    <!-- Shop Icon -->
+    <a href="{% url 'store' %}" class="flex flex-col items-center text-sm">
+      <img class='w-8 h-8 rounded-full' src="https://cdn-icons-png.flaticon.com/256/1364/1364029.png" alt="">
+        <span>Shop</span>
+    </a>
+    
+    <!-- Search Icon -->
+    <a href="#" class="flex flex-col items-center text-sm">
+        <img class='w-11 h-11' src="https://static.thenounproject.com/png/2729269-200.png" alt="">
+        <span>Search</span>
+    </a>
+    
+    <!-- Cart Icon -->
+    <a href="#" class="flex flex-col items-center text-sm relative">
+        <img class='h-8 w-8' src="https://cdn-icons-png.freepik.com/512/625/625230.png" alt="">
+        <span>Cart</span>
+        <span class="absolute -top-1 -right-2 bg-black text-white text-xs font-bold px-1 rounded-full">{{ cart_length }}</span>
+    </a>
+    
+    <!-- Wishlist Icon -->
+    <a href="#" class="flex flex-col items-center text-sm">
+       <img class='w-9 h-9' src="https://cdn-icons-png.flaticon.com/512/6839/6839987.png" alt="">
+        <span>Wishlist</span>
+        <span class="absolute -top-1 -right-2 bg-black text-white text-xs font-bold px-1 rounded-full">3</span>
+    </a>
+  </div>
+  <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 md:w-[25rem] z-50">
     <div class="p-4 flex justify-between items-center border-b">
-      <h2 class="text-4xl font-bold">Shopping Cart</h2>
+      <h2 class="text-2xl font-bold">Shopping Cart</h2>
       <button id="drawer-close-btn" class="text-black focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
+      </button>
     </div>
-    <p class='px-4 text-2xl text-gray-800'>The original products are limited</p>
+    <p class='px-4 text-xl text-gray-800'>The original products are limited</p>
     <div class="p-4">
         
           <div class="flex flex-col">
@@ -142,12 +134,12 @@
             {% endfor %}
             <!-- Display Subtotal and Total -->
             <div class="flex justify-between items-center mt-5">
-                <p class="font-medium text-xl text-gray-700">Sub Total</p>
-                <p class="font-bold text-xl text-black total-price">${{ total_price|floatformat:2 }}</p>
+                <p class="font-medium text-lg text-gray-700">Sub Total</p>
+                <p class="font-bold text-lg text-black total-price">${{ total_price|floatformat:2 }}</p>
             </div>
             <div class="flex justify-between items-center mt-5">
-                <p class="font-medium text-xl text-gray-700">Total</p>
-                <p class="font-bold text-xl text-black total-price">${{ total_price|floatformat:2 }}</p>
+                <p class="font-medium text-lg text-gray-700">Total</p>
+                <p class="font-bold text-lg text-black total-price">${{ total_price|floatformat:2 }}</p>
             </div>
             
             <!-- Checkout Button -->
@@ -158,9 +150,8 @@
             </div>
           </div>
     </div>
-    </div>
   </div>
-  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden"></div>
+  <div id="overlay-cart" class="fixed inset-0 bg-black bg-opacity-50 hidden"></div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const quantityInput = document.getElementById('quantity');
@@ -181,39 +172,39 @@
     });
   </script>
   <script>
-    const menuBtn = document.getElementById('menu-btn');
-    const closeBtn = document.getElementById('close-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const cartBtn = document.getElementById('cart-btn');
-    const cartDrawer = document.getElementById('cart-drawer');
-    const drawerCloseBtn = document.getElementById('drawer-close-btn');
-    const overlay = document.getElementById('overlay');
+    document.addEventListener('DOMContentLoaded', function() {
+      const cartBtn = document.getElementById('cart-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const cartDrawer = document.getElementById('cart-drawer');
+      const drawerCloseBtn = document.getElementById('drawer-close-btn');
+      const overlayCart = document.getElementById('overlay-cart');
+      const menuBtn = document.getElementById('menu-btn');
+      const closeBtn = document.getElementById('close-btn');
   
-    // Toggle mobile menu
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+      // Mobile Menu Toggle
+      menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        overlayCart.classList.toggle('hidden');
+      });
+      closeBtn.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        overlayCart.classList.add('hidden');
+      });
   
-    closeBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+      // Cart Drawer Toggle
+      cartBtn.addEventListener('click', () => {
+        cartDrawer.classList.remove('translate-x-full'); // Show the drawer
+        overlayCart.classList.remove('hidden'); // Show overlay
+      });
   
-    // Open cart drawer when Cart button is clicked
-    cartBtn.addEventListener('click', () => {
-      cartDrawer.classList.remove('translate-x-full'); // Open the drawer
-      overlay.classList.remove('hidden'); // Show the background overlay
-    });
+      // Close cart drawer when close button or overlay is clicked
+      drawerCloseBtn.addEventListener('click', closeCartDrawer);
+      overlayCart.addEventListener('click', closeCartDrawer);
   
-    // Close cart drawer when close button is clicked
-    drawerCloseBtn.addEventListener('click', () => {
-      cartDrawer.classList.add('translate-x-full'); // Close the drawer
-      overlay.classList.add('hidden'); // Hide the background overlay
-    });
-  
-    // Also close the drawer if clicking on the overlay
-    overlay.addEventListener('click', () => {
-      cartDrawer.classList.add('translate-x-full');
-      overlay.classList.add('hidden');
+      function closeCartDrawer() {
+        cartDrawer.classList.add('translate-x-full'); // Hide the drawer
+        overlayCart.classList.add('hidden'); // Hide overlay
+      }
     });
   </script>
   <script>

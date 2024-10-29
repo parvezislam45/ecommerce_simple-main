@@ -10,9 +10,19 @@ class Items (models.Model):
      subimage1 = models.ImageField(upload_to='photos/store',blank=True)
      subimage2 = models.ImageField(upload_to='photos/store',blank=True)
      subimage3 = models.ImageField(upload_to='photos/store',blank=True)
+     subimage4 = models.ImageField(upload_to='photos/store',blank=True)
+     subimage5 = models.ImageField(upload_to='photos/store',blank=True)
+     subimage6 = models.ImageField(upload_to='photos/store',blank=True)
+     subimage7 = models.ImageField(upload_to='photos/store',blank=True)
+     subimage8 = models.ImageField(upload_to='photos/store',blank=True)
      desimage1 = models.ImageField(upload_to='photos/store',blank=True)
      desimage2 = models.ImageField(upload_to='photos/store',blank=True)
      desimage3 = models.ImageField(upload_to='photos/store',blank=True)
+     desimage4 = models.ImageField(upload_to='photos/store',blank=True)
+     desimage5 = models.ImageField(upload_to='photos/store',blank=True)
+     desimage6 = models.ImageField(upload_to='photos/store',blank=True)
+     desimage7 = models.ImageField(upload_to='photos/store',blank=True)
+     desimage8 = models.ImageField(upload_to='photos/store',blank=True)
      
      
 class CartItem(models.Model):
